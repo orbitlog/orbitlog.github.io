@@ -8,7 +8,7 @@ export default function Earth() {
   const angle = useRef(0);
 
   useFrame((_, delta) => {
-    angle.current += delta * 0.3; // 地球公转速度，调慢点
+    angle.current += delta * 0.1; // 地球公转速度，调慢点
     const a = 15; // 轨道长半轴
     const b = 14; // 短半轴，略微椭圆
     const x = a * Math.cos(angle.current);

@@ -11,9 +11,11 @@ export default function System() {
             <ambientLight intensity={0.2} />
             <pointLight position={[0, 0, 0]} intensity={2} color="#ffcc33" />
             <Suspense fallback={null}>
-              <CameraController />
+              <CameraController>
+                <SolarSystem />
+              </CameraController>
               <Sky />
-              <SolarSystem />
+              
             </Suspense>
           </Canvas>
         </div>
