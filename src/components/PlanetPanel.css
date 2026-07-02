@@ -1,16 +1,16 @@
 .planet-panel {
   position: fixed;
-  right: 2rem;
+  left: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 420px;
+  width: min(360px, calc(100vw - 3rem));
   max-width: 90vw;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(30px);
-  border-radius: 24px;
-  padding: 2.5rem;
+  background: rgba(8, 13, 28, 0.48);
+  backdrop-filter: blur(24px) saturate(145%);
+  border-radius: 8px;
+  padding: 1.5rem;
   border: 1px solid rgba(255, 255, 255, 0.18);
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 20px 80px rgba(0, 0, 0, 0.45);
   animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 100;
 }
@@ -18,7 +18,7 @@
 @keyframes slideIn {
   from {
     opacity: 0;
-    transform: translateY(-50%) translateX(60px);
+    transform: translateY(-50%) translateX(-30px);
   }
   to {
     opacity: 1;
@@ -26,40 +26,62 @@
   }
 }
 
+.planet-panel--landing {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-50%) translateX(-24px) scale(0.96);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.planet-kicker {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 0.72rem;
+  letter-spacing: 0;
+  margin: 0 0 0.45rem;
+}
+
 .planet-content h2 {
-  font-size: 2.2rem;
-  margin-bottom: 1rem;
+  font-size: 2rem;
+  margin: 0 0 0.9rem;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem;
+  gap: 0.2rem;
   font-weight: 600;
+  line-height: 1.05;
 }
 
 .planet-name-en {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   opacity: 0.65;
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
 }
 
 .module-tag {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.15);
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 0.42rem 0.75rem;
+  border-radius: 8px;
   font-size: 0.9rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.9rem;
   border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.module-summary {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.74);
+  line-height: 1.65;
+  font-size: 0.92rem;
 }
 
 .planet-stats {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin: 1.5rem 0;
-  padding: 1.2rem;
+  gap: 0.6rem;
+  margin: 1.2rem 0;
+  padding: 0.8rem;
   background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -71,55 +93,61 @@
 }
 
 .stat-label {
-  font-size: 0.75rem;
+  font-size: 0.68rem;
   opacity: 0.7;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0;
 }
 
 .stat-value {
-  font-size: 1.1rem;
+  font-size: 0.95rem;
   font-weight: 600;
 }
 
 .planet-description {
   color: rgba(255, 255, 255, 0.85);
-  line-height: 1.7;
-  margin: 1.5rem 0;
-  font-size: 0.95rem;
+  line-height: 1.68;
+  margin: 1.1rem 0;
+  font-size: 0.92rem;
 }
 
 .button-group {
   display: flex;
   gap: 0.75rem;
-  margin-top: 1.5rem;
+  margin-top: 1rem;
 }
 
 .enter-btn,
 .exit-btn {
   flex: 1;
-  padding: 0.85rem 1.5rem;
-  border-radius: 50px;
+  min-height: 44px;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 500;
-  transition: all 0.3s;
+  transition: transform 0.2s ease, background 0.2s ease, opacity 0.2s ease;
   border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
+.enter-btn:disabled,
+.exit-btn:disabled {
+  cursor: progress;
+  opacity: 0.65;
+}
+
 .enter-btn {
-  background: linear-gradient(135deg, rgba(100, 200, 255, 0.3), rgba(80, 150, 255, 0.3));
+  background: rgba(255, 255, 255, 0.22);
   color: white;
 }
 
 .enter-btn:hover {
-  background: linear-gradient(135deg, rgba(100, 200, 255, 0.4), rgba(80, 150, 255, 0.4));
+  background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(100, 200, 255, 0.3);
 }
 
 .exit-btn {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.24);
   color: white;
 }
 
@@ -128,19 +156,94 @@
   transform: translateY(-2px);
 }
 
+.landing-overlay {
+  --planet-color: #7db9ff;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 50% 50%, color-mix(in srgb, var(--planet-color) 35%, transparent), transparent 26%),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.22), transparent 38%),
+    rgba(2, 5, 15, 0.08);
+  animation: landingSky 1.35s ease-in forwards;
+}
+
+.landing-core {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 24vmin;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255, 255, 255, 0.7), var(--planet-color) 38%, rgba(4, 8, 20, 0.95) 72%);
+  transform: translate(-50%, -50%);
+  animation: planetApproach 1.35s ease-in forwards;
+}
+
+.landing-haze {
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(ellipse at 35% 45%, rgba(255, 255, 255, 0.38), transparent 34%),
+    radial-gradient(ellipse at 70% 55%, rgba(255, 255, 255, 0.28), transparent 30%),
+    linear-gradient(115deg, transparent 18%, rgba(255, 255, 255, 0.16), transparent 72%);
+  filter: blur(22px);
+  opacity: 0;
+  animation: cloudPass 1.35s ease-in forwards;
+}
+
+@keyframes planetApproach {
+  0% {
+    transform: translate(-50%, -50%) scale(0.4);
+    opacity: 0.7;
+  }
+  65% {
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(12);
+    opacity: 0.96;
+  }
+}
+
+@keyframes cloudPass {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(1);
+  }
+  45% {
+    opacity: 0.75;
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(-12px) scale(1.35);
+  }
+}
+
+@keyframes landingSky {
+  to {
+    background-color: rgba(2, 5, 15, 0.75);
+  }
+}
+
 @media (max-width: 768px) {
   .planet-panel {
-    right: 1rem;
+    left: 1rem;
+    top: auto;
+    bottom: 1rem;
+    transform: none;
     width: calc(100vw - 2rem);
-    padding: 2rem;
+    padding: 1rem;
   }
 
   .planet-stats {
-    grid-template-columns: 1fr;
-    gap: 0.75rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.45rem;
   }
 
-  .button-group {
-    flex-direction: column;
+  .planet-content h2 {
+    font-size: 1.55rem;
   }
 }

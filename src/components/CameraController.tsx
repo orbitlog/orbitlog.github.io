@@ -12,6 +12,7 @@ export default function CameraController({ children }: { children: React.ReactNo
 
   const spherical = useRef(new THREE.Spherical(40, Math.PI / 3, Math.PI / 4));
   const target = useRef(new THREE.Vector3(0, 0, 0));
+  const solarSystemTarget = useRef(new THREE.Vector3(0, 0, 0));
   const lastPos = useRef({ x: 0, y: 0 });
   const movement = useRef({
     forward: false,
@@ -29,6 +30,7 @@ export default function CameraController({ children }: { children: React.ReactNo
 
   const speed = 0.005;
   const moveSpeed = 0.5;
+  const defaultCameraPosition = useRef(new THREE.Vector3(0, 20, 80));
 
   /**
    * 鼠标按下拖动
@@ -38,8 +40,6 @@ export default function CameraController({ children }: { children: React.ReactNo
     isDragging.current = true
     lastPos.current = { x: e.clientX, y: e.clientY };
     gl.domElement.style.cursor = 'grabbing';
-    focusTarget.current = null;
-    isFollowing.current = false;
   };
 
   /**
@@ -72,6 +72,10 @@ export default function CameraController({ children }: { children: React.ReactNo
     camera.position.copy(target.current.clone().add(offset));
     camera.lookAt(target.current);
 
+    if (focusTarget.current) {
+      focusDistance.current = camera.position.distanceTo(target.current);
+    }
+
     lastPos.current = { x: e.clientX, y: e.clientY };
   };
 
@@ -83,8 +87,13 @@ export default function CameraController({ children }: { children: React.ReactNo
     const dir = new THREE.Vector3().subVectors(camera.position, target.current).normalize();
     const distance = camera.position.distanceTo(target.current);
     let newDistance = distance + e.deltaY * 0.01;
-    newDistance = Math.max(5, Math.min(200, newDistance));
+    const minDistance = focusTarget.current ? Math.max(1.4, focusDistance.current * 0.45) : 5;
+    newDistance = Math.max(minDistance, Math.min(200, newDistance));
     camera.position.copy(target.current.clone().add(dir.multiplyScalar(newDistance)));
+
+    if (focusTarget.current) {
+      focusDistance.current = newDistance;
+    }
   };
 
   /**
@@ -128,6 +137,8 @@ export default function CameraController({ children }: { children: React.ReactNo
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);
     };
+    // Camera controls are bound to the current canvas and read mutable refs.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gl]);
 
   /**
@@ -157,7 +168,25 @@ export default function CameraController({ children }: { children: React.ReactNo
       onComplete: () => {
         focusTarget.current = targetObj;
         focusDistance.current = distance;
+        target.current.copy(targetPos);
         isFollowing.current = true;
+      },
+    });
+  };
+
+  const resetView = () => {
+    focusTarget.current = null;
+    isFollowing.current = false;
+    target.current.copy(solarSystemTarget.current);
+
+    gsap.to(camera.position, {
+      x: defaultCameraPosition.current.x,
+      y: defaultCameraPosition.current.y,
+      z: defaultCameraPosition.current.z,
+      duration: 1.3,
+      ease: 'power2.out',
+      onUpdate: () => {
+        camera.lookAt(target.current);
       },
     });
   };
@@ -167,6 +196,7 @@ export default function CameraController({ children }: { children: React.ReactNo
     if (focusTarget.current && isFollowing.current) {
       const targetPos = new THREE.Vector3();
       focusTarget.current.getWorldPosition(targetPos);
+      target.current.copy(targetPos);
 
       const direction = new THREE.Vector3()
         .subVectors(camera.position, targetPos)
@@ -204,7 +234,7 @@ export default function CameraController({ children }: { children: React.ReactNo
   });
 
   return (
-    <CameraContext.Provider value={{ focusOn }}>
+    <CameraContext.Provider value={{ focusOn, resetView }}>
       {children}
     </CameraContext.Provider>
   );

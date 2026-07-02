@@ -1,81 +1,69 @@
-<!--
- * @Author: spli9@iflytek.com spli9@iflytek.com
- * @Date: 2025-07-04 17:03:07
- * @LastEditors: spli9@iflytek.com
- * @LastEditTime: 2025-07-04 17:03:44
- * @Description: 
- * @FilePath: /orbitlog/README.md
- * 
--->
-# orbitlog.github.io
-This is a commit for my blog page.
+# OrbitLog
 
-# React + TypeScript + Vite
+OrbitLog 是一个太阳系形态的个人博客。首页是 3D 太阳系，点击天体会聚焦到该星球，左侧出现毛玻璃模块面板；点击“进入模块”后会播放降落转场，再进入对应页面。
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## 模块规划
 
-Currently, two official plugins are available:
+| 天体 | 模块 | 路由 | 适合放什么 |
+| --- | --- | --- | --- |
+| 太阳 | 站点核心 | `/module/sun` | 最新内容、总导航、状态 |
+| 水星 | 博客文章 | `/module/mercury` | Markdown 博客、随笔、技术文章 |
+| 金星 | 灵感与审美 | `/module/venus` | 设计参考、句子、音乐、影像 |
+| 地球 | 个人简介 | `/module/earth` | 关于我、技能、经历、联系方式 |
+| 火星 | 项目与实验 | `/module/mars` | 项目、原型、作品、复盘 |
+| 木星 | 兴趣宇宙 | `/module/jupiter` | 摄影、电影、游戏、阅读等兴趣 |
+| 土星 | 相册与生活 | `/module/saturn` | 生活照片、旅行、猫咪相册 |
+| 天王星 | 知识库 | `/module/uranus` | 学习笔记、资料索引、工具清单 |
+| 海王星 | 未来计划 | `/module/neptune` | 愿望清单、路线图、长期计划 |
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 内容放哪里
 
-## Expanding the ESLint configuration
+- 今天的博客 Markdown：`src/content/blog/YYYY-MM-DD-title.md`
+- 博客文章里的图片：`public/media/blog/YYYY-MM-DD-title/`
+- 猫咪照片：`public/media/cats/`
+- 个人头像、简介图：`public/media/profile/`
+- 项目截图：`public/media/projects/project-name/`
+- 兴趣相关图片：`public/media/interests/`
+- 旅行照片：`public/media/travel/place-name/`
+- 生活碎片：`public/media/life/YYYY/`
+- 未来计划图片：`public/media/future/`
+- PDF、简历、项目附件：`public/files/`
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+静态资源在页面里从根路径引用，例如 `/media/cats/napping.jpg`。
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 主要代码位置
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- 太阳系场景：`src/pages/System.tsx`
+- 相机聚焦和拖拽：`src/components/CameraController.tsx`
+- 左侧毛玻璃面板和降落转场：`src/components/PlanetPanel.tsx`
+- 星球数据和模块路由：`src/types/planet.ts`
+- 模块页面内容、博客读取：`src/content/modules.ts`
+- 每个星球的页面模板：`src/pages/PlanetModule.tsx`
+- 页面主题样式：`src/pages/Page.css`
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## 新增一篇博客
+
+1. 在 `src/content/blog/` 新建 Markdown 文件，例如 `2026-07-02-my-day.md`。
+2. 文件顶部写 front matter：
+
+```md
+---
+title: 标题
+date: 2026-07-02
+planet: mercury
+tags: life, note
+summary: 一句话摘要
+---
+
+正文内容。
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+3. 运行项目，进入水星模块即可看到文章卡片。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 开发命令
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
+npm run build
+npm run lint
 ```
