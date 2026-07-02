@@ -3,42 +3,43 @@ import { useFrame } from '@react-three/fiber';
 import OrbitEllipse from '../OrbitEllipse';
 import * as THREE from 'three';
 import { useCamera } from '@/contexts/CameraContext';
+import { usePlanet } from '@/contexts/PlanetContext';
+import { PLANET_DATA } from '@/types/planet';
 
 export default function Mercury() {
   const mercuryRef = useRef<THREE.Mesh>(null);
   const angle = useRef(0);
   const { focusOn } = useCamera();
+  const { setSelectedPlanet } = usePlanet();
 
   useFrame((_, delta) => {
-    angle.current += delta * 0.2; // 公转速度
-    const a = 10; // 长半轴
-    const b = 9.5; // 短半轴
+    angle.current += delta * 0.4;
+    const a = 8;
+    const b = 7.8;
     const x = a * Math.cos(angle.current);
     const z = b * Math.sin(angle.current);
     if (mercuryRef.current) {
       mercuryRef.current.position.set(x, 0, z);
+      mercuryRef.current.rotation.y += delta * 0.1;
     }
   });
 
-  const inclination = THREE.MathUtils.degToRad(7); // 地球轨道接近0度
+  const inclination = THREE.MathUtils.degToRad(7);
+
+  const handleClick = () => {
+    if (mercuryRef.current) {
+      focusOn(mercuryRef.current, 3);
+      setSelectedPlanet(PLANET_DATA.mercury);
+    }
+  };
 
   return (
-    <>
-        <group rotation-x={inclination}>
-            {/* 水星本体 */}
-            <mesh 
-              ref={mercuryRef} 
-              onClick={() => {
-                if (mercuryRef.current) focusOn(mercuryRef.current, 10); // 可设距离
-              }}
-            >
-              <sphereGeometry args={[0.4, 32, 32]} />
-              <meshStandardMaterial color="blue" />
-            </mesh>
-
-            {/* 水星轨道 */}
-            <OrbitEllipse a={10} b={9.5} color="white" />
-        </group>
-    </>
+    <group rotation-x={inclination}>
+      <mesh ref={mercuryRef} onClick={handleClick}>
+        <sphereGeometry args={[0.38, 32, 32]} />
+        <meshStandardMaterial color="#8C7853" roughness={0.9} />
+      </mesh>
+      <OrbitEllipse a={8} b={7.8} color="white" />
+    </group>
   );
 }

@@ -30,6 +30,10 @@ export default function CameraController({ children }: { children: React.ReactNo
   const speed = 0.005;
   const moveSpeed = 0.5;
 
+  /**
+   * 鼠标按下拖动
+   * @param e 
+   */
   const handleMouseDown = (e: MouseEvent) => {
     isDragging.current = true
     lastPos.current = { x: e.clientX, y: e.clientY };
@@ -38,11 +42,19 @@ export default function CameraController({ children }: { children: React.ReactNo
     isFollowing.current = false;
   };
 
+  /**
+   * 鼠标抬起
+   */
   const handleMouseUp = () => {
     isDragging.current = false
     gl.domElement.style.cursor = 'grab';
   };
 
+  /**
+   * 鼠标移动
+   * @param e 
+   * @returns 
+   */
   const handleMouseMove = (e: MouseEvent) => {
     if (!isDragging.current) return;
     const deltaX = e.clientX - lastPos.current.x;
@@ -63,6 +75,10 @@ export default function CameraController({ children }: { children: React.ReactNo
     lastPos.current = { x: e.clientX, y: e.clientY };
   };
 
+  /**
+   * 滚轮放大
+   * @param e 
+   */
   const handleWheel = (e: WheelEvent) => {
     const dir = new THREE.Vector3().subVectors(camera.position, target.current).normalize();
     const distance = camera.position.distanceTo(target.current);
@@ -71,6 +87,10 @@ export default function CameraController({ children }: { children: React.ReactNo
     camera.position.copy(target.current.clone().add(dir.multiplyScalar(newDistance)));
   };
 
+  /**
+   * 前进后退
+   * @param e 
+   */
   const handleKeyDown = (e: KeyboardEvent) => {
     if (e.key === 'w') movement.current.forward = true;
     if (e.key === 's') movement.current.backward = true;
@@ -110,6 +130,11 @@ export default function CameraController({ children }: { children: React.ReactNo
     };
   }, [gl]);
 
+  /**
+   * 聚焦星球
+   * @param targetObj 
+   * @param distance 
+   */
   const focusOn = (targetObj: THREE.Object3D, distance = 5) => {
     const targetPos = new THREE.Vector3();
     targetObj.getWorldPosition(targetPos);
