@@ -7,33 +7,36 @@ import './PlanetPanel.css';
 
 export default function PlanetPanel() {
   const { selectedPlanet, setSelectedPlanet } = usePlanet();
-  const { resetView } = useCamera();
+  const { landOnFocused, resetView } = useCamera();
   const navigate = useNavigate();
-  const [isLanding, setIsLanding] = useState(false);
+  const [landingPhase, setLandingPhase] = useState<'idle' | 'approach' | 'cloud'>('idle');
 
   if (!selectedPlanet) return null;
 
-  const handleEnter = () => {
+  const isLanding = landingPhase !== 'idle';
+
+  const handleEnter = async () => {
     if (selectedPlanet.route) {
-      setIsLanding(true);
+      setLandingPhase('approach');
+      await landOnFocused();
+      setLandingPhase('cloud');
       window.setTimeout(() => {
         navigate(selectedPlanet.route);
-      }, 1350);
+      }, 760);
     }
   };
 
   const handleExit = () => {
-    setIsLanding(false);
+    setLandingPhase('idle');
     setSelectedPlanet(null);
     resetView();
   };
 
   return (
     <>
-      {isLanding && (
-        <div className="landing-overlay" style={{ '--planet-color': selectedPlanet.color } as CSSProperties}>
-          <div className="landing-haze" />
-          <div className="landing-core" />
+      {landingPhase === 'cloud' && (
+        <div className="landing-overlay landing-overlay--cloud" style={{ '--planet-color': selectedPlanet.color } as CSSProperties}>
+          <div className="landing-cloud" />
         </div>
       )}
       <aside className={`planet-panel ${isLanding ? 'planet-panel--landing' : ''}`}>

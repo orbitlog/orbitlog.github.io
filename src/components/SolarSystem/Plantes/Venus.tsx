@@ -2,15 +2,19 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import OrbitEllipse from '../OrbitEllipse';
 import * as THREE from 'three';
-import { useCamera } from '@/contexts/CameraContext';
-import { usePlanet } from '@/contexts/PlanetContext';
-import { PLANET_DATA } from '@/types/planet';
+import { usePlanetInteraction } from '../usePlanetInteraction';
+import { PLANET_TEXTURES, usePlanetTexture } from '../textures';
 
-export default function Venus() {
+interface PlanetProps {
+  returnTargetId?: string;
+  onReturnComplete?: () => void;
+}
+
+export default function Venus({ returnTargetId, onReturnComplete }: PlanetProps) {
   const venusRef = useRef<THREE.Mesh>(null);
   const angle = useRef(Math.PI * 0.5);
-  const { focusOn } = useCamera();
-  const { setSelectedPlanet } = usePlanet();
+  const handleClick = usePlanetInteraction('venus', venusRef, 3, returnTargetId, onReturnComplete);
+  const venusTexture = usePlanetTexture(PLANET_TEXTURES.venus);
 
   useFrame((_, delta) => {
     angle.current += delta * 0.32;
@@ -26,18 +30,11 @@ export default function Venus() {
 
   const inclination = THREE.MathUtils.degToRad(3.4);
 
-  const handleClick = () => {
-    if (venusRef.current) {
-      focusOn(venusRef.current, 3);
-      setSelectedPlanet(PLANET_DATA.venus);
-    }
-  };
-
   return (
     <group rotation-x={inclination}>
       <mesh ref={venusRef} onClick={handleClick}>
         <sphereGeometry args={[0.95, 32, 32]} />
-        <meshStandardMaterial color="#FFC649" roughness={0.7} />
+        <meshStandardMaterial map={venusTexture} roughness={0.7} />
       </mesh>
       <OrbitEllipse a={11} b={10.9} color="white" />
     </group>

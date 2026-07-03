@@ -2,15 +2,19 @@ import { useRef } from 'react';
 import { useFrame } from '@react-three/fiber';
 import OrbitEllipse from '../OrbitEllipse';
 import * as THREE from 'three';
-import { useCamera } from '@/contexts/CameraContext';
-import { usePlanet } from '@/contexts/PlanetContext';
-import { PLANET_DATA } from '@/types/planet';
+import { usePlanetInteraction } from '../usePlanetInteraction';
+import { PLANET_TEXTURES, usePlanetTexture } from '../textures';
 
-export default function Mars() {
+interface PlanetProps {
+  returnTargetId?: string;
+  onReturnComplete?: () => void;
+}
+
+export default function Mars({ returnTargetId, onReturnComplete }: PlanetProps) {
   const marsRef = useRef<THREE.Mesh>(null);
   const angle = useRef(Math.PI);
-  const { focusOn } = useCamera();
-  const { setSelectedPlanet } = usePlanet();
+  const handleClick = usePlanetInteraction('mars', marsRef, 3, returnTargetId, onReturnComplete);
+  const marsTexture = usePlanetTexture(PLANET_TEXTURES.mars);
 
   useFrame((_, delta) => {
     angle.current += delta * 0.16;
@@ -26,18 +30,11 @@ export default function Mars() {
 
   const inclination = THREE.MathUtils.degToRad(1.85);
 
-  const handleClick = () => {
-    if (marsRef.current) {
-      focusOn(marsRef.current, 3);
-      setSelectedPlanet(PLANET_DATA.mars);
-    }
-  };
-
   return (
     <group rotation-x={inclination}>
       <mesh ref={marsRef} onClick={handleClick}>
         <sphereGeometry args={[0.53, 32, 32]} />
-        <meshStandardMaterial color="#CD5C5C" roughness={0.8} />
+        <meshStandardMaterial map={marsTexture} roughness={0.8} />
       </mesh>
       <OrbitEllipse a={17} b={16.8} color="white" />
     </group>

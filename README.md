@@ -40,6 +40,14 @@ OrbitLog 是一个太阳系形态的个人博客。首页是 3D 太阳系，点�
 - 模块页面内容、博客读取：`src/content/modules.ts`
 - 每个星球的页面模板：`src/pages/PlanetModule.tsx`
 - 页面主题样式：`src/pages/Page.css`
+- 行星和太阳贴图：`public/textures/planets/`
+
+## 纹理来源
+
+太阳、行星和土星环贴图来自 Solar System Scope 的 Solar Textures，按 Creative Commons Attribution 4.0 International license 发布。
+
+- 来源：https://www.solarsystemscope.com/textures/
+- 许可：https://creativecommons.org/licenses/by/4.0/
 
 ## 新增一篇博客
 

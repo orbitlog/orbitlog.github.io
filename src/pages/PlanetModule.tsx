@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { blogPosts, getModuleContent, getPlanet } from '@/content/modules';
 import './Page.css';
@@ -21,12 +21,26 @@ export default function PlanetModule() {
   const planet = getPlanet(planetId);
   const content = getModuleContent(planet.id);
   const themeClass = themeClassByPlanet[planet.id] ?? themeClassByPlanet.sun;
+  const [isLeaving, setIsLeaving] = useState(false);
 
   const visiblePosts = useMemo(() => blogPosts.slice(0, 4), []);
 
+  const handleBack = () => {
+    setIsLeaving(true);
+    window.setTimeout(() => {
+      navigate('/', { state: { returnFrom: planet.id } });
+    }, 680);
+  };
+
   return (
     <main className={`module-page ${themeClass}`}>
-      <button className="back-btn" onClick={() => navigate('/')}>
+      {isLeaving && (
+        <div className="route-cloud route-cloud--closing">
+          <div className="route-cloud__mist" />
+        </div>
+      )}
+
+      <button className="back-btn" onClick={handleBack} disabled={isLeaving}>
         返回太阳系
       </button>
 

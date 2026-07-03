@@ -25,12 +25,46 @@ export default function CameraController({ children }: { children: React.ReactNo
   const focusTarget = useRef<THREE.Object3D | null>(null);
   const focusDistance = useRef(5);
   const isFollowing = useRef(false);
+  const isAnimating = useRef(false);
+  const hasManualOrbit = useRef(false);
   // 使用useRef防止闭包导致的state不改变问题
   const isDragging = useRef(false);
 
   const speed = 0.005;
   const moveSpeed = 0.5;
   const defaultCameraPosition = useRef(new THREE.Vector3(0, 20, 80));
+  const defaultLookAt = useRef(new THREE.Vector3(0, 0, 0));
+  const activeTween = useRef<gsap.core.Tween | null>(null);
+
+  const getWorldTarget = (targetObj: THREE.Object3D) => {
+    const targetPos = new THREE.Vector3();
+    targetObj.getWorldPosition(targetPos);
+    return targetPos;
+  };
+
+  const getRadialDirection = (targetPos: THREE.Vector3) => {
+    const direction = targetPos.clone().sub(solarSystemTarget.current);
+
+    if (direction.lengthSq() < 0.0001) {
+      return new THREE.Vector3(0, 0.2, 1).normalize();
+    }
+
+    return direction.normalize();
+  };
+
+  const getRadialCameraPosition = (targetObj: THREE.Object3D, distance: number) => {
+    const targetPos = getWorldTarget(targetObj);
+    return {
+      cameraPos: targetPos.clone().add(getRadialDirection(targetPos).multiplyScalar(distance)),
+      targetPos,
+    };
+  };
+
+  const stopActiveTween = () => {
+    activeTween.current?.kill();
+    activeTween.current = null;
+    isAnimating.current = false;
+  };
 
   /**
    * 鼠标按下拖动
@@ -74,6 +108,7 @@ export default function CameraController({ children }: { children: React.ReactNo
 
     if (focusTarget.current) {
       focusDistance.current = camera.position.distanceTo(target.current);
+      hasManualOrbit.current = true;
     }
 
     lastPos.current = { x: e.clientX, y: e.clientY };
@@ -147,60 +182,165 @@ export default function CameraController({ children }: { children: React.ReactNo
    * @param distance 
    */
   const focusOn = (targetObj: THREE.Object3D, distance = 5) => {
-    const targetPos = new THREE.Vector3();
-    targetObj.getWorldPosition(targetPos);
+    stopActiveTween();
+    isAnimating.current = true;
+    isFollowing.current = false;
+    hasManualOrbit.current = false;
+    focusTarget.current = targetObj;
+    focusDistance.current = distance;
 
-    const direction = new THREE.Vector3()
-      .subVectors(camera.position, targetPos)
-      .normalize();
+    const startCamera = camera.position.clone();
+    const progress = { value: 0 };
 
-    const newPos = targetPos.clone().add(direction.multiplyScalar(distance));
-
-    gsap.to(camera.position, {
-      x: newPos.x,
-      y: newPos.y,
-      z: newPos.z,
-      duration: 1.5,
-      ease: 'power2.out',
-      onUpdate: () => {
-        camera.lookAt(targetPos);
-      },
-      onComplete: () => {
-        focusTarget.current = targetObj;
-        focusDistance.current = distance;
-        target.current.copy(targetPos);
-        isFollowing.current = true;
-      },
+    return new Promise<void>((resolve) => {
+      activeTween.current = gsap.to(progress, {
+        value: 1,
+        duration: 1.7,
+        ease: 'power3.inOut',
+        onUpdate: () => {
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, distance);
+          camera.position.lerpVectors(startCamera, cameraPos, progress.value);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+        },
+        onComplete: () => {
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, distance);
+          camera.position.copy(cameraPos);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+          isAnimating.current = false;
+          isFollowing.current = true;
+          activeTween.current = null;
+          resolve();
+        },
+      });
     });
   };
 
   const resetView = () => {
+    stopActiveTween();
+    const startCamera = camera.position.clone();
+    const startTarget = target.current.clone();
+    const progress = { value: 0 };
+
     focusTarget.current = null;
     isFollowing.current = false;
-    target.current.copy(solarSystemTarget.current);
+    hasManualOrbit.current = false;
+    isAnimating.current = true;
 
-    gsap.to(camera.position, {
-      x: defaultCameraPosition.current.x,
-      y: defaultCameraPosition.current.y,
-      z: defaultCameraPosition.current.z,
-      duration: 1.3,
-      ease: 'power2.out',
-      onUpdate: () => {
-        camera.lookAt(target.current);
-      },
+    return new Promise<void>((resolve) => {
+      activeTween.current = gsap.to(progress, {
+        value: 1,
+        duration: 1.45,
+        ease: 'power3.inOut',
+        onUpdate: () => {
+          camera.position.lerpVectors(startCamera, defaultCameraPosition.current, progress.value);
+          target.current.lerpVectors(startTarget, defaultLookAt.current, progress.value);
+          camera.lookAt(target.current);
+        },
+        onComplete: () => {
+          camera.position.copy(defaultCameraPosition.current);
+          target.current.copy(defaultLookAt.current);
+          camera.lookAt(target.current);
+          isAnimating.current = false;
+          activeTween.current = null;
+          resolve();
+        },
+      });
+    });
+  };
+
+  const landOnFocused = () => {
+    if (!focusTarget.current) return Promise.resolve();
+
+    stopActiveTween();
+    const targetObj = focusTarget.current;
+    const startCamera = camera.position.clone();
+    const closeDistance = Math.max(0.72, focusDistance.current * 0.18);
+    const progress = { value: 0 };
+
+    isFollowing.current = false;
+    isAnimating.current = true;
+
+    return new Promise<void>((resolve) => {
+      activeTween.current = gsap.to(progress, {
+        value: 1,
+        duration: 1.55,
+        ease: 'power2.inOut',
+        onUpdate: () => {
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, closeDistance);
+          camera.position.lerpVectors(startCamera, cameraPos, progress.value);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+        },
+        onComplete: () => {
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, closeDistance);
+          camera.position.copy(cameraPos);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+          isAnimating.current = false;
+          activeTween.current = null;
+          resolve();
+        },
+      });
+    });
+  };
+
+  const riseFromSurface = (targetObj: THREE.Object3D, distance = 5) => {
+    stopActiveTween();
+    focusTarget.current = targetObj;
+    focusDistance.current = distance;
+    hasManualOrbit.current = false;
+    isFollowing.current = false;
+    isAnimating.current = true;
+
+    const startDistance = Math.max(0.72, distance * 0.18);
+    const progress = { value: 0 };
+
+    return new Promise<void>((resolve) => {
+      activeTween.current = gsap.to(progress, {
+        value: 1,
+        duration: 1.8,
+        ease: 'power3.inOut',
+        onStart: () => {
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, startDistance);
+          camera.position.copy(cameraPos);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+        },
+        onUpdate: () => {
+          const currentDistance = THREE.MathUtils.lerp(startDistance, distance, progress.value);
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, currentDistance);
+          camera.position.copy(cameraPos);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+        },
+        onComplete: () => {
+          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, distance);
+          camera.position.copy(cameraPos);
+          target.current.copy(targetPos);
+          camera.lookAt(targetPos);
+          isAnimating.current = false;
+          isFollowing.current = true;
+          activeTween.current = null;
+          resolve();
+        },
+      });
     });
   };
 
   useFrame(() => {
+    if (isAnimating.current) return;
+
     // 若已聚焦某个目标，进入跟随模式
     if (focusTarget.current && isFollowing.current) {
       const targetPos = new THREE.Vector3();
       focusTarget.current.getWorldPosition(targetPos);
       target.current.copy(targetPos);
 
-      const direction = new THREE.Vector3()
-        .subVectors(camera.position, targetPos)
-        .normalize();
+      const direction = hasManualOrbit.current
+        ? new THREE.Vector3().subVectors(camera.position, targetPos).normalize()
+        : getRadialDirection(targetPos);
 
       const desiredPos = targetPos.clone().add(direction.multiplyScalar(focusDistance.current));
       camera.position.lerp(desiredPos, 0.1);
@@ -234,7 +374,7 @@ export default function CameraController({ children }: { children: React.ReactNo
   });
 
   return (
-    <CameraContext.Provider value={{ focusOn, resetView }}>
+    <CameraContext.Provider value={{ focusOn, landOnFocused, resetView, riseFromSurface }}>
       {children}
     </CameraContext.Provider>
   );
