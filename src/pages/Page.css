@@ -302,46 +302,93 @@
   overflow: hidden;
 }
 
-.route-cloud__mist {
+.route-cloud__panel {
   position: absolute;
-  inset: -24%;
-  background:
-    radial-gradient(ellipse at 22% 46%, rgba(255, 255, 255, 0.98), transparent 31%),
-    radial-gradient(ellipse at 50% 42%, rgba(255, 255, 255, 0.98), transparent 34%),
-    radial-gradient(ellipse at 75% 58%, rgba(255, 255, 255, 0.95), transparent 32%),
-    linear-gradient(115deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.84), rgba(255, 255, 255, 0));
-  filter: blur(28px);
+  top: -12%;
+  bottom: -12%;
+  width: 58%;
+  background: linear-gradient(90deg, rgba(250, 253, 255, 0.9), #ffffff 74%);
+  border: 2px solid rgba(197, 224, 245, 0.95);
+  box-shadow:
+    inset -18px 0 34px rgba(212, 235, 250, 0.8),
+    0 0 42px rgba(255, 255, 255, 0.58);
 }
 
-.route-cloud--closing .route-cloud__mist {
-  opacity: 0;
-  transform: scale(0.9) translateY(24px);
-  animation: routeCloudIn 0.68s ease-in forwards;
+.route-cloud__panel--left {
+  left: -8%;
+  border-radius: 0 38% 38% 0;
 }
 
-.route-cloud--lifting .route-cloud__mist {
-  opacity: 1;
-  transform: scale(1.15) translateY(-8px);
-  animation: routeCloudOut 1.65s ease-out forwards;
+.route-cloud__panel--right {
+  right: -8%;
+  border-radius: 38% 0 0 38%;
+  transform: scaleX(-1);
 }
 
-@keyframes routeCloudIn {
+.route-cloud__panel span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 2px solid rgba(181, 217, 242, 0.9);
+  box-shadow:
+    inset -8px -10px 18px rgba(215, 236, 250, 0.92),
+    0 0 22px rgba(255, 255, 255, 0.72);
+}
+
+.route-cloud__panel span:nth-child(1) { width: 34%; aspect-ratio: 1; left: 50%; top: 4%; }
+.route-cloud__panel span:nth-child(2) { width: 43%; aspect-ratio: 1; left: 66%; top: 12%; }
+.route-cloud__panel span:nth-child(3) { width: 30%; aspect-ratio: 1; left: 75%; top: 26%; }
+.route-cloud__panel span:nth-child(4) { width: 45%; aspect-ratio: 1; left: 56%; top: 38%; }
+.route-cloud__panel span:nth-child(5) { width: 33%; aspect-ratio: 1; left: 72%; top: 52%; }
+.route-cloud__panel span:nth-child(6) { width: 42%; aspect-ratio: 1; left: 59%; top: 66%; }
+.route-cloud__panel span:nth-child(7) { width: 28%; aspect-ratio: 1; left: 78%; top: 80%; }
+.route-cloud__panel span:nth-child(8) { width: 40%; aspect-ratio: 1; left: 35%; top: 18%; }
+.route-cloud__panel span:nth-child(9) { width: 36%; aspect-ratio: 1; left: 30%; top: 48%; }
+.route-cloud__panel span:nth-child(10) { width: 30%; aspect-ratio: 1; left: 36%; top: 76%; }
+.route-cloud__panel span:nth-child(11) { width: 22%; aspect-ratio: 1; left: 84%; top: -2%; }
+.route-cloud__panel span:nth-child(12) { width: 24%; aspect-ratio: 1; left: 82%; top: 92%; }
+
+.route-cloud--closing .route-cloud__panel--left {
+  transform: translateX(-110%);
+  animation: routeCloudLeftClose 1.3s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+.route-cloud--closing .route-cloud__panel--right {
+  transform: translateX(110%) scaleX(-1);
+  animation: routeCloudRightClose 1.3s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+.route-cloud--lifting .route-cloud__panel--left {
+  transform: translateX(0);
+  animation: routeCloudLeftOpen 1.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.route-cloud--lifting .route-cloud__panel--right {
+  transform: translateX(0) scaleX(-1);
+  animation: routeCloudRightOpen 1.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes routeCloudLeftClose {
   to {
-    opacity: 1;
-    transform: scale(1.14) translateY(-8px);
+    transform: translateX(0);
   }
 }
 
-@keyframes routeCloudOut {
-  0% {
-    opacity: 1;
-    transform: scale(1.15) translateY(-8px);
+@keyframes routeCloudRightClose {
+  to {
+    transform: translateX(0) scaleX(-1);
   }
-  72% {
-    opacity: 0.45;
+}
+
+@keyframes routeCloudLeftOpen {
+  to {
+    transform: translateX(-112%);
   }
-  100% {
-    opacity: 0;
-    transform: scale(1.42) translateY(-52px);
+}
+
+@keyframes routeCloudRightOpen {
+  to {
+    transform: translateX(112%) scaleX(-1);
   }
 }

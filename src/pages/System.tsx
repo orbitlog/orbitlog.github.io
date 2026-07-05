@@ -5,7 +5,9 @@ import Sky from '@/components/Sky'
 import CameraController from '@/components/CameraController'
 import SolarSystem from "@/components/SolarSystem/SolarSystem"
 import PlanetPanel from '@/components/PlanetPanel'
+import CloudCurtain from '@/components/CloudCurtain'
 import { PlanetProvider } from '@/contexts/PlanetContext'
+import { CameraProvider } from '@/contexts/CameraContext'
 import './Page.css'
 
 interface RouteState {
@@ -35,6 +37,7 @@ export default function System() {
     };
 
     return (
+      <CameraProvider>
         <PlanetProvider>
             <div style={{ width: '100vw', height: '100vh' }}>
               <Canvas camera={{ position: [0, 20, 80], fov: 60 }}>
@@ -50,11 +53,10 @@ export default function System() {
               </Canvas>
               <PlanetPanel />
               {isReturning && (
-                <div className="route-cloud route-cloud--lifting">
-                  <div className="route-cloud__mist" />
-                </div>
+                <CloudCurtain className="route-cloud route-cloud--lifting" panelClassName="route-cloud__panel" />
               )}
             </div>
         </PlanetProvider>
+      </CameraProvider>
     )
 }

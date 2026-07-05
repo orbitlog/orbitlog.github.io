@@ -3,6 +3,7 @@ import { useCamera } from '@/contexts/CameraContext';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import type { CSSProperties } from 'react';
+import CloudCurtain from './CloudCurtain';
 import './PlanetPanel.css';
 
 export default function PlanetPanel() {
@@ -22,7 +23,7 @@ export default function PlanetPanel() {
       setLandingPhase('cloud');
       window.setTimeout(() => {
         navigate(selectedPlanet.route);
-      }, 760);
+      }, 180);
     }
   };
 
@@ -34,10 +35,12 @@ export default function PlanetPanel() {
 
   return (
     <>
-      {landingPhase === 'cloud' && (
-        <div className="landing-overlay landing-overlay--cloud" style={{ '--planet-color': selectedPlanet.color } as CSSProperties}>
-          <div className="landing-cloud" />
-        </div>
+      {landingPhase !== 'idle' && (
+        <CloudCurtain
+          className={`landing-overlay landing-overlay--${landingPhase}`}
+          panelClassName="landing-cloud"
+          style={{ '--planet-color': selectedPlanet.color } as CSSProperties}
+        />
       )}
       <aside className={`planet-panel ${isLanding ? 'planet-panel--landing' : ''}`}>
         <div className="planet-content">

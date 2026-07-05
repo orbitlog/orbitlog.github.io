@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { blogPosts, getModuleContent, getPlanet } from '@/content/modules';
+import CloudCurtain from '@/components/CloudCurtain';
 import './Page.css';
 
 const themeClassByPlanet: Record<string, string> = {
@@ -29,15 +30,13 @@ export default function PlanetModule() {
     setIsLeaving(true);
     window.setTimeout(() => {
       navigate('/', { state: { returnFrom: planet.id } });
-    }, 680);
+    }, 1300);
   };
 
   return (
     <main className={`module-page ${themeClass}`}>
       {isLeaving && (
-        <div className="route-cloud route-cloud--closing">
-          <div className="route-cloud__mist" />
-        </div>
+        <CloudCurtain className="route-cloud route-cloud--closing" panelClassName="route-cloud__panel" />
       )}
 
       <button className="back-btn" onClick={handleBack} disabled={isLeaving}>

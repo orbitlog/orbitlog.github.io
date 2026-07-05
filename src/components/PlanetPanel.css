@@ -1,5 +1,6 @@
 .planet-panel {
   position: fixed;
+  pointer-events: auto;
   left: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
@@ -168,26 +169,78 @@
 
 .landing-cloud {
   position: absolute;
-  inset: -25%;
-  background:
-    radial-gradient(ellipse at 28% 44%, rgba(255, 255, 255, 0.98), transparent 32%),
-    radial-gradient(ellipse at 55% 40%, rgba(255, 255, 255, 0.95), transparent 34%),
-    radial-gradient(ellipse at 72% 58%, rgba(255, 255, 255, 0.92), transparent 31%),
-    linear-gradient(110deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.78), rgba(255, 255, 255, 0));
-  filter: blur(28px);
-  opacity: 0;
-  transform: scale(0.92) translateY(24px);
-  animation: cloudIn 0.76s ease-in forwards;
+  top: -12%;
+  bottom: -12%;
+  width: 58%;
+  background: linear-gradient(90deg, rgba(250, 253, 255, 0.9), #ffffff 74%);
+  border: 2px solid rgba(197, 224, 245, 0.95);
+  box-shadow:
+    inset -18px 0 34px rgba(212, 235, 250, 0.8),
+    0 0 42px rgba(255, 255, 255, 0.58);
+  opacity: 0.98;
 }
 
-@keyframes cloudIn {
-  0% {
-    opacity: 0;
-    transform: scale(0.92) translateY(24px);
+.landing-cloud--left {
+  left: -8%;
+  border-radius: 0 38% 38% 0;
+  transform: translateX(-110%);
+}
+
+.landing-cloud--right {
+  right: -8%;
+  border-radius: 38% 0 0 38%;
+  transform: translateX(110%) scaleX(-1);
+}
+
+.landing-cloud span {
+  position: absolute;
+  display: block;
+  border-radius: 999px;
+  background: #ffffff;
+  border: 2px solid rgba(181, 217, 242, 0.9);
+  box-shadow:
+    inset -8px -10px 18px rgba(215, 236, 250, 0.92),
+    0 0 22px rgba(255, 255, 255, 0.72);
+}
+
+.landing-cloud span:nth-child(1) { width: 34%; aspect-ratio: 1; left: 50%; top: 4%; }
+.landing-cloud span:nth-child(2) { width: 43%; aspect-ratio: 1; left: 66%; top: 12%; }
+.landing-cloud span:nth-child(3) { width: 30%; aspect-ratio: 1; left: 75%; top: 26%; }
+.landing-cloud span:nth-child(4) { width: 45%; aspect-ratio: 1; left: 56%; top: 38%; }
+.landing-cloud span:nth-child(5) { width: 33%; aspect-ratio: 1; left: 72%; top: 52%; }
+.landing-cloud span:nth-child(6) { width: 42%; aspect-ratio: 1; left: 59%; top: 66%; }
+.landing-cloud span:nth-child(7) { width: 28%; aspect-ratio: 1; left: 78%; top: 80%; }
+.landing-cloud span:nth-child(8) { width: 40%; aspect-ratio: 1; left: 35%; top: 18%; }
+.landing-cloud span:nth-child(9) { width: 36%; aspect-ratio: 1; left: 30%; top: 48%; }
+.landing-cloud span:nth-child(10) { width: 30%; aspect-ratio: 1; left: 36%; top: 76%; }
+.landing-cloud span:nth-child(11) { width: 22%; aspect-ratio: 1; left: 84%; top: -2%; }
+.landing-cloud span:nth-child(12) { width: 24%; aspect-ratio: 1; left: 82%; top: 92%; }
+
+.landing-overlay--approach .landing-cloud--left {
+  animation: cloudCurtainLeftClose 1.55s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+.landing-overlay--approach .landing-cloud--right {
+  animation: cloudCurtainRightClose 1.55s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+}
+
+.landing-overlay--cloud .landing-cloud--left {
+  transform: translateX(0);
+}
+
+.landing-overlay--cloud .landing-cloud--right {
+  transform: translateX(0) scaleX(-1);
+}
+
+@keyframes cloudCurtainLeftClose {
+  to {
+    transform: translateX(0);
   }
-  100% {
-    opacity: 1;
-    transform: scale(1.18) translateY(-8px);
+}
+
+@keyframes cloudCurtainRightClose {
+  to {
+    transform: translateX(0) scaleX(-1);
   }
 }
 

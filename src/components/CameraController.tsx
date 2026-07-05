@@ -2,13 +2,14 @@ import {
   useThree,
   useFrame
 } from '@react-three/fiber';
-import { useEffect, useRef } from 'react';
+import { useEffect, useLayoutEffect, useRef } from 'react';
 import * as THREE from 'three';
 import gsap from 'gsap';
-import { CameraContext } from '@/contexts/CameraContext';
+import { useCamera } from '@/contexts/CameraContext';
 
 export default function CameraController({ children }: { children: React.ReactNode }) {
   const { camera, gl } = useThree();
+  const { registerControls } = useCamera();
 
   const spherical = useRef(new THREE.Spherical(40, Math.PI / 3, Math.PI / 4));
   const target = useRef(new THREE.Vector3(0, 0, 0));
@@ -24,6 +25,7 @@ export default function CameraController({ children }: { children: React.ReactNo
   });
   const focusTarget = useRef<THREE.Object3D | null>(null);
   const focusDistance = useRef(5);
+  const focusOffset = useRef(new THREE.Vector3(0, 0, 5));
   const isFollowing = useRef(false);
   const isAnimating = useRef(false);
   const hasManualOrbit = useRef(false);
@@ -58,6 +60,23 @@ export default function CameraController({ children }: { children: React.ReactNo
       cameraPos: targetPos.clone().add(getRadialDirection(targetPos).multiplyScalar(distance)),
       targetPos,
     };
+  };
+
+  const getFocusedCameraPosition = (targetObj: THREE.Object3D, distance: number) => {
+    const targetPos = getWorldTarget(targetObj);
+    const direction = focusOffset.current.lengthSq() > 0.0001
+      ? focusOffset.current.clone().normalize()
+      : getRadialDirection(targetPos);
+
+    return {
+      cameraPos: targetPos.clone().add(direction.multiplyScalar(distance)),
+      targetPos,
+    };
+  };
+
+  const syncFocusOffset = () => {
+    focusOffset.current.copy(camera.position).sub(target.current);
+    focusDistance.current = focusOffset.current.length();
   };
 
   const stopActiveTween = () => {
@@ -107,7 +126,8 @@ export default function CameraController({ children }: { children: React.ReactNo
     camera.lookAt(target.current);
 
     if (focusTarget.current) {
-      focusDistance.current = camera.position.distanceTo(target.current);
+      focusOffset.current.copy(offset);
+      focusDistance.current = offset.length();
       hasManualOrbit.current = true;
     }
 
@@ -122,12 +142,13 @@ export default function CameraController({ children }: { children: React.ReactNo
     const dir = new THREE.Vector3().subVectors(camera.position, target.current).normalize();
     const distance = camera.position.distanceTo(target.current);
     let newDistance = distance + e.deltaY * 0.01;
-    const minDistance = focusTarget.current ? Math.max(1.4, focusDistance.current * 0.45) : 5;
+    const minDistance = focusTarget.current ? 0.72 : 5;
     newDistance = Math.max(minDistance, Math.min(200, newDistance));
     camera.position.copy(target.current.clone().add(dir.multiplyScalar(newDistance)));
 
     if (focusTarget.current) {
       focusDistance.current = newDistance;
+      focusOffset.current.copy(camera.position).sub(target.current);
     }
   };
 
@@ -208,6 +229,7 @@ export default function CameraController({ children }: { children: React.ReactNo
           camera.position.copy(cameraPos);
           target.current.copy(targetPos);
           camera.lookAt(targetPos);
+          syncFocusOffset();
           isAnimating.current = false;
           isFollowing.current = true;
           activeTween.current = null;
@@ -242,6 +264,7 @@ export default function CameraController({ children }: { children: React.ReactNo
           camera.position.copy(defaultCameraPosition.current);
           target.current.copy(defaultLookAt.current);
           camera.lookAt(target.current);
+          focusOffset.current.set(0, 0, 5);
           isAnimating.current = false;
           activeTween.current = null;
           resolve();
@@ -268,16 +291,17 @@ export default function CameraController({ children }: { children: React.ReactNo
         duration: 1.55,
         ease: 'power2.inOut',
         onUpdate: () => {
-          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, closeDistance);
+          const { cameraPos, targetPos } = getFocusedCameraPosition(targetObj, closeDistance);
           camera.position.lerpVectors(startCamera, cameraPos, progress.value);
           target.current.copy(targetPos);
           camera.lookAt(targetPos);
         },
         onComplete: () => {
-          const { cameraPos, targetPos } = getRadialCameraPosition(targetObj, closeDistance);
+          const { cameraPos, targetPos } = getFocusedCameraPosition(targetObj, closeDistance);
           camera.position.copy(cameraPos);
           target.current.copy(targetPos);
           camera.lookAt(targetPos);
+          syncFocusOffset();
           isAnimating.current = false;
           activeTween.current = null;
           resolve();
@@ -320,6 +344,7 @@ export default function CameraController({ children }: { children: React.ReactNo
           camera.position.copy(cameraPos);
           target.current.copy(targetPos);
           camera.lookAt(targetPos);
+          syncFocusOffset();
           isAnimating.current = false;
           isFollowing.current = true;
           activeTween.current = null;
@@ -338,12 +363,15 @@ export default function CameraController({ children }: { children: React.ReactNo
       focusTarget.current.getWorldPosition(targetPos);
       target.current.copy(targetPos);
 
-      const direction = hasManualOrbit.current
-        ? new THREE.Vector3().subVectors(camera.position, targetPos).normalize()
-        : getRadialDirection(targetPos);
+      if (!hasManualOrbit.current) {
+        focusOffset.current.copy(getRadialDirection(targetPos).multiplyScalar(focusDistance.current));
+      }
 
-      const desiredPos = targetPos.clone().add(direction.multiplyScalar(focusDistance.current));
-      camera.position.lerp(desiredPos, 0.1);
+      if (focusOffset.current.lengthSq() > 0.0001) {
+        focusOffset.current.setLength(focusDistance.current);
+      }
+
+      camera.position.copy(targetPos).add(focusOffset.current);
       camera.lookAt(targetPos);
       return;
     }
@@ -373,9 +401,11 @@ export default function CameraController({ children }: { children: React.ReactNo
     camera.lookAt(target.current);
   });
 
-  return (
-    <CameraContext.Provider value={{ focusOn, landOnFocused, resetView, riseFromSurface }}>
-      {children}
-    </CameraContext.Provider>
-  );
+  useLayoutEffect(() => {
+    registerControls({ focusOn, landOnFocused, resetView, riseFromSurface });
+    // Camera control functions close over the current Three camera instance.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [registerControls]);
+
+  return <>{children}</>;
 }

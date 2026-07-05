@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useRef } from 'react';
+import { useFrame } from '@react-three/fiber';
 import type { RefObject } from 'react';
 import type * as THREE from 'three';
 import { useCamera } from '@/contexts/CameraContext';
@@ -26,7 +27,7 @@ export function usePlanetInteraction(
     setSelectedPlanet(planet);
   }, [distance, focusOn, objectRef, planetId, setSelectedPlanet]);
 
-  useEffect(() => {
+  useFrame(() => {
     const object = objectRef.current;
     const planet = PLANET_DATA[planetId];
 
@@ -35,11 +36,11 @@ export function usePlanetInteraction(
     }
 
     hasHandledReturn.current = true;
-    setSelectedPlanet(planet);
     riseFromSurface(object, distance).finally(() => {
+      setSelectedPlanet(planet);
       onReturnComplete?.();
     });
-  }, [distance, objectRef, onReturnComplete, planetId, returnTargetId, riseFromSurface, setSelectedPlanet]);
+  });
 
   return selectPlanet;
 }
