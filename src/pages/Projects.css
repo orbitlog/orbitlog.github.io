@@ -1,0 +1,176 @@
+.mars-page {
+  --mars-ivory: #f1dfbf;
+  --mars-muted: #c3a18b;
+  --mars-amber: #efbc7c;
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  min-height: 100vh;
+  color: var(--mars-ivory);
+  background: #32190f;
+  font-family: 'Songti SC', 'Noto Serif CJK SC', 'STSong', Georgia, serif;
+}
+.mars-page *, .mars-page *::before, .mars-page *::after { box-sizing: border-box; }
+.mars-page button, .mars-page a { -webkit-tap-highlight-color: transparent; }
+.mars-page button { font: inherit; }
+.mars-page a { color: inherit; font-weight: 400; }
+.mars-page a:hover, .mars-page button:hover { color: #fff0d5; }
+.mars-page :is(a, button):focus-visible { outline: 2px solid #edc68f; outline-offset: 6px; }
+.mars-page button:focus:not(:focus-visible) { outline: none; }
+.mars-page ::selection { color: #fff2d8; background: #b47042; }
+.mars-section-inner { width: calc(100% - 2 * clamp(26px, 7vw, 120px)); max-width: 1360px; margin: 0 auto; position: relative; z-index: 2; }
+.mars-nav { position: absolute; z-index: 20; top: 0; left: 0; right: 0; height: 106px; padding: 0 clamp(26px, 4.7vw, 82px); display: flex; justify-content: space-between; align-items: center; gap: 20px; color: #eddbc4; }
+.mars-wordmark { font-family: Georgia, 'Times New Roman', serif; letter-spacing: 5px; font-size: 14px; }
+.mars-nav-location { font-size: 12px; letter-spacing: 2px; color: #e1c6ae; }
+.mars-nav-location > span { margin: 0 9px; color: #c5a18b; }
+.mars-back { display: flex; align-items: center; gap: 10px; border: 0; background: transparent; color: #ecd4b9; padding: 12px 0; font-size: 12px !important; letter-spacing: 2px; }
+.mars-back:disabled { opacity: .5; cursor: progress; }
+.mars-back > span { font-size: 18px; }
+.mars-chapter-nav { position: fixed; top: 50%; right: 28px; transform: translateY(-50%); z-index: 15; display: flex; flex-direction: column; gap: 22px; }
+.mars-chapter-nav button { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding: 5px; background: transparent; border: 0; color: #e2c7ad; }
+.mars-chapter-nav button > span { font-size: 10px; opacity: 0; transition: opacity .3s; letter-spacing: 2px; }
+.mars-chapter-nav button:hover > span, .mars-chapter-nav button.is-current > span { opacity: .8; }
+.mars-chapter-nav i { display: block; height: 4px; width: 4px; border-radius: 50%; background: #e2c7ad66; transition: box-shadow .3s, background .3s; }
+.mars-chapter-nav .is-current i { background: #f6d29c; box-shadow: 0 0 0 4px #e2c7ad1a; }
+.mars-scene { position: relative; isolation: isolate; overflow: hidden; }
+.mars-landscape { position: absolute; width: 100%; height: 112%; top: -6%; left: 0; object-fit: cover; pointer-events: none; z-index: -3; }
+.mars-landing { min-height: 740px; height: 100svh; }
+.mars-landing-image { object-position: 52% 50%; }
+.mars-landing-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, #24100d36 0%, transparent 34%, #32190f00 67%, #32190f 100%); }
+.mars-hero-title { padding-top: clamp(160px, 20vh, 240px); }
+.mars-eyebrow { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 9px; letter-spacing: 3px; font-weight: 400; color: #d0ae90; margin: 0 0 22px; }
+.mars-eyebrow > span { color: #c99b7780; margin: 0 10px; }
+.mars-hero-title h1 { display: flex; align-items: baseline; gap: 28px; font-size: clamp(78px, 10.5vw, 164px); font-weight: 400; letter-spacing: 4px; margin: 0; line-height: 1.15; text-shadow: 0 2px 24px #4b291d12; }
+.mars-hero-title h1 em { font-family: 'Baskerville', 'Times New Roman', serif; font-weight: 400; font-size: .59em; letter-spacing: -2px; }
+.mars-hero-subtitle { font-size: clamp(16px, 1.8vw, 25px); letter-spacing: 6px; margin: 20px 0 0; color: #ecd3b2; }
+.mars-landing-footer { position: absolute; left: 0; right: 0; bottom: 54px; display: flex; align-items: flex-end; justify-content: space-between; }
+.mars-coordinate { color: #c7a48a; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 7px; letter-spacing: 1.7px; }
+.mars-explore { position: absolute; left: 50%; bottom: 10px; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; gap: 18px; color: var(--mars-ivory); background: none; border: 0; padding: 16px; font-size: 13px !important; letter-spacing: 5px; }
+.mars-down-arrow { display: block; height: 15px; width: 15px; border-right: 1px solid #efcfaa; border-bottom: 1px solid #efcfaa; transform: rotate(45deg); animation: marsScrollHint 2.8s ease-in-out infinite; }
+.mars-traces { height: 108svh; min-height: 820px; }
+.mars-traces-image { object-position: 58% 55%; }
+.mars-traces-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, #32190f 0%, #32190f55 12%, transparent 31%, #28110800 67%, #32190f 100%), linear-gradient(90deg, #29120c29, transparent 60%); }
+.mars-traces-title { padding-top: clamp(90px, 14vh, 160px); }
+.mars-page h2 { font-size: clamp(42px, 5.2vw, 78px); line-height: 1.2; font-weight: 400; letter-spacing: 2px; margin: 0; }
+.mars-section-english { font-family: Georgia, 'Times New Roman', serif; font-size: 10px; letter-spacing: 5px; color: #d3b396; margin: 22px 0 0; }
+.mars-discovery-note { position: absolute; left: 0; right: 0; bottom: 11%; padding-left: 2px; }
+.mars-signal-dot { display: block; width: 5px; height: 5px; border-radius: 50%; background: #ffcc8e; box-shadow: 0 0 18px #ffb462; margin-bottom: 18px; }
+.mars-discovery-note p { font-size: 15px; line-height: 2; color: #e0bea2; margin: 0 0 21px; letter-spacing: 1px; }
+.mars-discovery-note button { display: flex; align-items: center; gap: 20px; background: none; border: 0; color: #eac9a5; padding: 8px 0; font-size: 11px; letter-spacing: 2px; }
+.mars-discovery-note button svg { width: 15px; transition: transform .3s; }
+.mars-discovery-note button:hover svg { transform: translateX(5px); }
+.mars-artifacts { min-height: 1160px; padding: 95px 0 0; }
+.mars-artifacts-image { object-position: 50% 77%; filter: brightness(.53) saturate(.8); }
+.mars-artifacts-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg, #32190f 0, #32190f66 21%, #26130d1a 50%, #21100bd6 100%); }
+.mars-artifacts-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 25px; }
+.mars-motion { display: flex; align-items: center; gap: 9px; padding: 10px 0 5px 10px; color: #cca78a; background: none; border: 0; font-size: 10px !important; letter-spacing: 1px; }
+.mars-motion > span { font-family: sans-serif; font-size: 11px; }
+.mars-artifacts-stage { position: relative; height: clamp(510px, 44vw, 660px); margin: 28px -20px 0; container-type: inline-size; }
+.mars-platform { position: absolute; z-index: 0; bottom: 64px; left: -3%; right: -3%; height: 44px; transform: perspective(1100px) rotateY(-4deg); background: linear-gradient(175deg, #8d6348, #5d3c28 42%, #352115); border-top: 2px solid #be8b5c66; box-shadow: 0 26px 42px #1a0c0980; }
+.mars-platform::before { content: ''; position: absolute; inset: -40px -1px 43px; height: 39px; background: linear-gradient(160deg, #9a7255, #6e4c34); transform-origin: bottom; transform: skewX(-34deg); border: 1px solid #af805355; }
+.mars-platform::after { content: ''; position: absolute; inset: 0; opacity: .25; background-image: repeating-linear-gradient(97deg, transparent 0 150px, #27160d88 151px 153px, transparent 155px 310px); }
+.mars-platform > span { position: absolute; left: 8%; bottom: 12px; height: 2px; width: 17%; background: #fbc47e; box-shadow: 0 0 15px #ed8d3d; }
+.mars-project-index { display: flex; align-items: center; justify-content: flex-end; gap: 30px; padding: 22px 0 25px; border-bottom: 1px solid #d5a78030; }
+.mars-index-label { font-size: 10px; color: #b38b6d; letter-spacing: 2px; margin-right: auto; }
+.mars-project-index button { display: flex; align-items: center; gap: 10px; padding: 8px 0; background: none; border: 0; color: #b8967c; font-family: Georgia, 'Times New Roman', serif; font-size: 14px; }
+.mars-project-index button > span { color: #a57c61; font-size: 9px; font-style: italic; }
+.mars-project-index i { height: 3px; width: 3px; background: transparent; border-radius: 50%; margin-left: 3px; }
+.mars-project-index .is-selected { color: #f2dfbf; }
+.mars-project-index .is-selected i { background: #f1c78e; box-shadow: 0 0 10px #e9ad69; }
+.mars-project-detail { display: grid; grid-template-columns: 1fr 1.45fr .85fr; align-items: center; gap: 45px; padding: 38px 0 40px; min-height: 180px; }
+.mars-project-identity > span { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 9px; color: #c59d7e; }
+.mars-project-identity > span > span { margin: 0 8px; color: #a47c5d; }
+.mars-project-identity h3 { font-family: 'Baskerville', 'Times New Roman', serif; font-size: 34px; font-weight: 400; line-height: 1.1; letter-spacing: -.8px; margin: 10px 0 7px; }
+.mars-project-identity p { margin: 0; color: #bfa088; font-size: 11px; letter-spacing: 1px; }
+.mars-project-story > p { color: #c6ab92; font-size: 12px; line-height: 1.95; margin: 0 0 15px; }
+.mars-project-story ul { list-style: none; display: flex; flex-wrap: wrap; gap: 8px; padding: 0; margin: 0; }
+.mars-project-story li { font-family: system-ui, sans-serif; border: 1px solid #c79b7730; color: #bb997d; font-size: 8px; padding: 3px 7px; }
+.mars-project-links { display: flex; flex-direction: column; gap: 16px; align-items: flex-end; }
+.mars-project-enter { display: inline-flex; gap: 26px; align-items: center; border-bottom: 1px solid #ba987563; padding: 9px 0; font-size: 12px; letter-spacing: 1px; }
+.mars-project-enter svg { width: 16px; transition: transform .25s; }
+.mars-project-enter:hover svg { transform: translateX(4px); }
+.mars-project-source { color: #b18b6d !important; font-size: 10px; }
+.mars-project-source > span { margin-left: 8px; }
+.mars-footer { border-top: 1px solid #c0946d20; padding: 58px 0 30px; text-align: center; }
+.mars-footer-wordmark { font-family: Georgia, 'Times New Roman', serif; font-size: 15px; letter-spacing: 8px; }
+.mars-footer > p { color: #a07b60; font-size: 10px; letter-spacing: 3px; margin: 15px 0 37px; }
+.mars-footer > div { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+.mars-footer button, .mars-footer > div a { border: 0; padding: 6px 0; background: none; color: #a9856a; font-size: 8px; letter-spacing: 1.5px; }
+.mars-footer button > span { margin-left: 8px; }
+.mars-page.is-paused .mars-down-arrow { animation-play-state: paused; }
+
+@keyframes marsScrollHint { 0%, 100% { opacity: .45; translate: 0 -3px; } 50% { opacity: 1; translate: 0 4px; } }
+
+@media (min-width: 1800px) { .mars-landing { max-height: 1300px; } .mars-traces { max-height: 1300px; } }
+@media (max-width: 1050px) {
+  .mars-section-inner { width: calc(100% - 100px); }
+  .mars-chapter-nav { right: 16px; }
+  .mars-project-detail { grid-template-columns: 1fr 1.3fr; gap: 24px 35px; }
+  .mars-project-links { grid-column: 2; flex-direction: row; justify-content: space-between; align-items: center; }
+  .mars-project-index { gap: 25px; }
+}
+@media (max-width: 720px) {
+  .mars-section-inner { width: calc(100% - 54px); }
+  .mars-nav { height: 79px; padding: 0 26px; }
+  .mars-wordmark { font-size: 11px; letter-spacing: 3px; }
+  .mars-nav-location { display: none; }
+  .mars-back { font-size: 10px !important; letter-spacing: 1px; gap: 6px; }
+  .mars-back > span { font-size: 14px; }
+  .mars-chapter-nav { display: none; }
+  .mars-landing { min-height: 690px; }
+  .mars-landing-image { object-position: 51% 48%; }
+  .mars-hero-title { padding-top: 165px; }
+  .mars-hero-title h1 { font-size: clamp(76px, 20vw, 112px); letter-spacing: 0; gap: 18px; }
+  .mars-hero-title h1 em { font-size: .57em; }
+  .mars-eyebrow { font-size: 7px; letter-spacing: 2px; margin-bottom: 20px; }
+  .mars-hero-subtitle { font-size: 17px; letter-spacing: 4px; margin-top: 15px; }
+  .mars-coordinate { font-size: 5px; letter-spacing: .5px; }
+  .mars-landing-footer { bottom: 32px; }
+  .mars-landing-footer > span:last-child { display: none; }
+  .mars-explore { bottom: 26px; font-size: 12px !important; letter-spacing: 3px; gap: 15px; }
+  .mars-down-arrow { width: 12px; height: 12px; }
+  .mars-traces { min-height: 760px; height: 94svh; }
+  .mars-traces-image { object-position: 87% 50%; }
+  .mars-traces-title { padding-top: 80px; }
+  .mars-page h2 { font-size: 41px; letter-spacing: 1px; }
+  .mars-section-english { font-size: 7px; letter-spacing: 2.8px; margin-top: 18px; }
+  .mars-discovery-note { bottom: 10%; }
+  .mars-discovery-note p { font-size: 12px; line-height: 1.9; }
+  .mars-discovery-note button { font-size: 10px; gap: 15px; }
+  .mars-artifacts { min-height: 0; padding-top: 70px; }
+  .mars-artifacts-header { gap: 12px; }
+  .mars-motion { font-size: 8px !important; gap: 6px; padding-bottom: 2px; }
+  .mars-motion > span { font-size: 10px; }
+  .mars-artifacts-stage { height: 425px; margin: 20px -5px 0; }
+  .mars-platform { left: -10%; right: -10%; bottom: 42px; height: 28px; }
+  .mars-platform::before { inset: -25px -1px 27px; height: 24px; }
+  .mars-platform > span { width: 28%; height: 1px; bottom: 8px; }
+  .mars-project-index { justify-content: space-between; gap: 8px; padding: 15px 0 18px; }
+  .mars-index-label { display: none; }
+  .mars-project-index button { font-size: 12px; gap: 6px; }
+  .mars-project-index button > span { font-size: 8px; }
+  .mars-project-index i { display: none; }
+  .mars-project-index .is-selected { text-decoration: underline; text-underline-offset: 8px; text-decoration-color: #cda36c; }
+  .mars-project-detail { display: flex; flex-direction: column; align-items: stretch; gap: 22px; padding: 26px 0 30px; min-height: 340px; }
+  .mars-project-identity h3 { font-size: 34px; }
+  .mars-project-identity > span { font-size: 8px; }
+  .mars-project-identity p { font-size: 11px; }
+  .mars-project-story > p { font-size: 12px; margin-bottom: 13px; }
+  .mars-project-links { flex-direction: row; align-items: center; justify-content: space-between; }
+  .mars-project-enter { font-size: 12px; gap: 20px; }
+  .mars-project-source { font-size: 10px; }
+  .mars-footer { padding-top: 35px; }
+  .mars-footer-wordmark { font-size: 13px; letter-spacing: 6px; }
+  .mars-footer > p { font-size: 9px; margin-bottom: 30px; }
+  .mars-footer > div a, .mars-footer button { font-size: 7px; }
+}
+@media (max-width: 370px) {
+  .mars-section-inner { width: calc(100% - 42px); }
+  .mars-nav { padding: 0 21px; }
+  .mars-hero-title h1 { font-size: 72px; gap: 12px; }
+  .mars-hero-title h1 em { font-size: .53em; }
+  .mars-page h2 { font-size: 36px; }
+  .mars-project-index button { font-size: 10px; gap: 5px; }
+  .mars-artifacts-stage { height: 380px; }
+}
+@media (prefers-reduced-motion: reduce) { .mars-page *, .mars-page *::before, .mars-page *::after { animation: none !important; transition: none !important; } }

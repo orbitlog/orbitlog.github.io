@@ -1,0 +1,50 @@
+.spatial-card-gallery { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; gap: clamp(18px, 3%, 40px); padding: 25px 3% 85px; perspective: 1500px; perspective-origin: 50% 42%; transform-style: preserve-3d; }
+.spatial-card-position { --card-y: 6px; --card-rz: -2deg; --card-ry: -13deg; --card-rx: 2deg; --card-lift: 0px; position: relative; width: 29%; max-width: 320px; aspect-ratio: .67; flex-shrink: 0; transform-style: preserve-3d; animation: spatialCardFloat 9s ease-in-out infinite; animation-delay: calc(var(--card-index) * -2.4s); }
+.spatial-card-position--1 { --card-y: -12px; --card-rz: 1deg; --card-ry: -10deg; }
+.spatial-card-position--2 { --card-y: 14px; --card-rz: 3deg; --card-ry: -16deg; }
+.spatial-card-position.is-selected { --card-lift: -12px; }
+.spatial-card { --pointer-rx: 0deg; --pointer-ry: 0deg; --shine-x: 50%; --shine-y: 25%; --card-text: #342719; --card-face: #c9b08b; --card-edge: #6d4d2e; display: block; position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 2px; background: transparent; text-align: left; color: var(--card-text); transform-style: preserve-3d; transform: rotateX(calc(var(--card-rx) + var(--pointer-rx))) rotateY(calc(var(--card-ry) + var(--pointer-ry))) rotateZ(var(--card-rz)); transition: transform .4s ease, scale .4s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.spatial-card--node-memory { --card-text: #edddba; --card-face: #1e2b20; --card-edge: #182019; }
+.spatial-card--img2particles { --card-text: #f1d7ae; --card-face: #5c3322; --card-edge: #3d2519; }
+.spatial-card:hover { scale: 1.025; }
+.spatial-card-face { position: absolute; inset: 0; display: block; border: 1px solid #dbb78988; border-radius: 2px; background: var(--card-face); overflow: hidden; transform: translateZ(6px); box-shadow: inset 0 0 30px #1e140a15; }
+.is-selected .spatial-card-face { border-color: #f0c38d; }
+.spatial-card-back { position: absolute; inset: 0; border-radius: 2px; background: var(--card-edge); transform: translateZ(-6px); box-shadow: 15px 16px 28px #190c0766, 0 4px 10px #190c0733; }
+.spatial-card-side { position: absolute; display: block; background: var(--card-edge); border: 1px solid #c4985f22; }
+.spatial-card-side--right { top: 1px; bottom: 1px; right: -12px; width: 12px; transform-origin: left center; transform: translateZ(6px) rotateY(90deg); }
+.spatial-card-side--left { top: 1px; bottom: 1px; left: -12px; width: 12px; transform-origin: right center; transform: translateZ(6px) rotateY(-90deg); }
+.spatial-card-side--bottom { bottom: -12px; left: 1px; right: 1px; height: 12px; transform-origin: center top; transform: translateZ(6px) rotateX(-90deg); }
+.spatial-card-shadow { position: absolute; left: -4%; right: -8%; height: 20px; bottom: -36px; background: #190b0799; filter: blur(14px); border-radius: 50%; transform: rotateX(65deg) rotateZ(-5deg); pointer-events: none; }
+.spatial-card-topline { position: absolute; top: 19px; left: 22px; right: 22px; z-index: 2; display: flex; justify-content: space-between; gap: 8px; color: var(--card-text); opacity: .6; font-family: 'SFMono-Regular', Consolas, monospace; font-size: 5px; font-weight: 400; letter-spacing: 1px; }
+.spatial-card-topline > span:last-child { font-family: 'Baskerville', 'Times New Roman', serif; font-style: italic; font-size: 10px; }
+.spatial-card-cover { position: absolute; inset: 0; display: block; overflow: hidden; mask-image: linear-gradient(#000 0%, #000 57%, transparent 88%); }
+.spatial-card-cover svg { height: 100%; width: 100%; display: block; }
+.spatial-card-cover svg > text { display: none; }
+.spatial-card-caption { position: absolute; z-index: 2; bottom: 58px; left: 25px; right: 20px; display: flex; flex-direction: column; gap: 13px; color: var(--card-text); }
+.spatial-card-caption strong { font-family: 'Baskerville', 'Times New Roman', serif; font-size: clamp(28px, 3vw, 43px); font-weight: 400; line-height: 1; letter-spacing: -1.3px; }
+.spatial-card-caption > span { font-family: 'Songti SC', 'STSong', serif; font-size: 14px; letter-spacing: 2px; font-weight: 400; }
+.spatial-card-bottomline { position: absolute; left: 25px; right: 22px; bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--card-text); opacity: .7; font-size: 8px; font-weight: 400; }
+.spatial-card-arrow { font-size: 23px; line-height: 1; }
+.spatial-card-shine { position: absolute; inset: 0; background: radial-gradient(ellipse at var(--shine-x) var(--shine-y), #fff3da16, transparent 65%); pointer-events: none; }
+.spatial-card-gallery.is-paused .spatial-card-position { animation-play-state: paused; }
+.spatial-card-gallery.is-paused .spatial-card { --pointer-rx: 0deg !important; --pointer-ry: 0deg !important; }
+@keyframes spatialCardFloat { 0%, 100% { transform: translate3d(0, calc(var(--card-y) + var(--card-lift)), 0); } 50% { transform: translate3d(0, calc(var(--card-y) + var(--card-lift) - 5px), 0); } }
+@container (max-width: 590px) {
+  .spatial-card-gallery { padding: 0 0 70px; }
+  .spatial-card-position { width: 70%; max-width: 260px; }
+  .spatial-card-position:not(.is-selected) { display: none; }
+  .spatial-card-position.is-selected { --card-y: 0px; --card-lift: 0px; --card-ry: -12deg; --card-rz: -2deg; }
+}
+@media (max-width: 720px) {
+  .spatial-card-position { max-width: 245px; }
+  .spatial-card-topline { top: 15px; left: 18px; right: 18px; font-size: 4px; letter-spacing: .6px; }
+  .spatial-card-topline > span:last-child { font-size: 8px; }
+  .spatial-card-caption { left: 21px; bottom: 48px; gap: 11px; }
+  .spatial-card-caption strong { font-size: 34px; }
+  .spatial-card-caption > span { font-size: 12px; letter-spacing: 1px; }
+  .spatial-card-bottomline { left: 21px; right: 18px; bottom: 16px; font-size: 7px; }
+  .spatial-card-arrow { font-size: 20px; }
+  .spatial-card-shadow { bottom: -25px; height: 16px; filter: blur(10px); }
+}
+@media (max-width: 370px) { .spatial-card-caption strong { font-size: 29px; } .spatial-card-caption > span { font-size: 11px; } }
+@media (prefers-reduced-motion: reduce) { .spatial-card-position { animation: none; transform: translate3d(0, calc(var(--card-y) + var(--card-lift)), 0); } .spatial-card { --pointer-rx: 0deg !important; --pointer-ry: 0deg !important; transition: none; } }

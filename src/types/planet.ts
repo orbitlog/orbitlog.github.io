@@ -75,8 +75,8 @@ export const PLANET_DATA: Record<string, PlanetInfo> = {
     period: 1.88,
     module: '项目与实验',
     route: '/module/mars',
-    summary: '放置作品、原型、失败实验和正在建造的东西。',
-    description: '火星代表探索和建造。页面可以用荒凉山脉、红色岩层、基地感边框来承载项目记录。',
+    summary: '独立项目、实用工具，以及不设终点的探索。',
+    description: '走进项目画廊：在 Relaverse 中连接相遇，用 Node Memory 简化开发环境，让 img2particles 把像素变成流动的粒子。',
   },
   jupiter: {
     id: 'jupiter',

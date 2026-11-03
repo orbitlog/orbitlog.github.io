@@ -4,9 +4,14 @@ on:
   push:
     branches:
       - main
+  workflow_dispatch:
 
 permissions:
   contents: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
 
 jobs:
   deploy:
@@ -20,12 +25,35 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 22
+          cache: npm
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
+
+      - name: Check source
+        run: npm run lint
 
       - name: Build project
         run: npm run build
+
+      - name: Checkout Relaverse
+        uses: actions/checkout@v3
+        with:
+          repository: orbitlog/relaverse
+          ref: main
+          path: .projects/relaverse
+          persist-credentials: false
+
+      - name: Install Relaverse dependencies
+        working-directory: .projects/relaverse
+        run: npm ci
+
+      - name: Build Relaverse at its public path
+        working-directory: .projects/relaverse
+        run: npm run build -- --base=/relaverse/
+
+      - name: Assemble GitHub Pages site
+        run: npm run pages:prepare
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
