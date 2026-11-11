@@ -87,7 +87,7 @@ export default function Projects() {
 
   return (
     <main className={`mars-page${paused ? ' is-paused' : ''}`} ref={root}>
-      {isLeaving && <CloudCurtain className="route-cloud route-cloud--closing" panelClassName="route-cloud__panel" />}
+      {isLeaving && <CloudCurtain className="route-cloud route-cloud--closing" />}
 
       <nav className="mars-nav" aria-label="火星页面导航">
         <Link to="/" className="mars-wordmark" aria-label="OrbitLog 首页">ORBITLOG</Link>

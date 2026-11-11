@@ -13,6 +13,7 @@ export interface BlogPost {
   summary: string;
   tags: string[];
   body: string;
+  category: string;
 }
 
 export interface ModuleSection {
@@ -58,6 +59,7 @@ export const blogPosts: BlogPost[] = Object.entries(blogFiles)
       summary: meta.summary ?? body.split('\n')[0] ?? '',
       tags: meta.tags ? meta.tags.split(',').map((tag) => tag.trim()) : [],
       body,
+      category: meta.category ?? '随笔',
     };
   })
   .sort((a, b) => b.date.localeCompare(a.date));

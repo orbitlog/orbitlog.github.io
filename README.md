@@ -39,6 +39,9 @@ OrbitLog 是一个太阳系形态的个人博客。首页是 3D 太阳系，点�
 - 星球数据和模块路由：`src/types/planet.ts`
 - 模块页面内容、博客读取：`src/content/modules.ts`
 - 每个星球的页面模板：`src/pages/PlanetModule.tsx`
+- 水星文章列表与阅读页：`src/pages/Mercury.tsx`、`src/pages/MercuryArticle.tsx`、`src/pages/Mercury.css`
+- UTF-8 字节实验：`src/components/EncodingLab.tsx`
+- 太阳站点总览：`src/pages/Sun.tsx`、`src/pages/Sun.css`（最新文章、项目和八个星球入口）
 - 页面主题样式：`src/pages/Page.css`
 - 行星和太阳贴图：`public/textures/planets/`
 
@@ -59,6 +62,7 @@ OrbitLog 是一个太阳系形态的个人博客。首页是 3D 太阳系，点�
 title: 标题
 date: 2026-07-02
 planet: mercury
+category: 随笔
 tags: life, note
 summary: 一句话摘要
 ---
@@ -66,7 +70,9 @@ summary: 一句话摘要
 正文内容。
 ```
 
-3. 运行项目，进入水星模块即可看到文章卡片。
+3. 运行项目，进入水星模块即可看到文章卡片，点击进入 `/module/mercury/文件名（不含 .md）` 阅读全文。支持标题、表格、代码块和文章目录，分类由 `category` 指定（默认“随笔”）。太阳页会自动显示最新文章，`pages:prepare` 会为每篇文章生成可直接访问的静态入口。
+
+编码相关文章可用 `<!-- encoding-lab -->` 在 Markdown 中插入交互式 UTF-8 字节实验。
 
 ## 开发命令
 

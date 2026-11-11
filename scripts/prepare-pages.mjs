@@ -1,4 +1,4 @@
-import { access, copyFile, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { access, copyFile, cp, mkdir, readFile, readdir, rm, writeFile } from 'node:fs/promises';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -20,6 +20,8 @@ await cp(relaverseOutput, resolve(output, 'relaverse'), { recursive: true });
 // GitHub Pages serves these directory indexes on direct visits and refreshes.
 const planets = ['sun', 'mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
 const routes = ['blog', 'about', ...planets.map((planet) => `module/${planet}`)];
+const posts = await readdir(resolve(root, 'src/content/blog'));
+routes.push(...posts.filter((name) => name.endsWith('.md')).map((name) => `module/mercury/${name.slice(0, -3)}`));
 for (const route of routes) {
   const destination = resolve(output, route);
   await mkdir(destination, { recursive: true });

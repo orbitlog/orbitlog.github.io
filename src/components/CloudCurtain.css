@@ -1,0 +1,113 @@
+.cloud-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  --cloud-duration: 1.55s;
+}
+
+.cloud-curtain__veil {
+  position: absolute;
+  inset: 0;
+  background: #edf2f5;
+  opacity: 0;
+  animation: cloud-veil-in var(--cloud-duration) ease-in forwards;
+}
+
+.cloud-curtain__mist {
+  position: absolute;
+  inset: -35%;
+  background: url('/textures/atmosphere/mist.svg') center / 100% 100% no-repeat;
+  mask-image: radial-gradient(ellipse at center, #000 45%, transparent 85%);
+  opacity: 0;
+  will-change: transform, opacity;
+  animation: cloud-drift-in var(--cloud-duration) cubic-bezier(.25, .1, .35, 1) forwards;
+}
+
+.cloud-curtain__mist--far {
+  --cloud-x: -12%;
+  --cloud-y: -7%;
+  --cloud-rotation: -12deg;
+  --cloud-scale: 1.15;
+}
+
+.cloud-curtain__mist--middle {
+  --cloud-x: 23%;
+  --cloud-y: 12%;
+  --cloud-rotation: 165deg;
+  --cloud-scale: 1.4;
+  background-size: 85% 115%;
+}
+
+.cloud-curtain__mist--near {
+  --cloud-x: -30%;
+  --cloud-y: 18%;
+  --cloud-rotation: 15deg;
+  --cloud-scale: 1.8;
+  background-size: 120% 90%;
+}
+
+.landing-overlay--cloud .cloud-curtain__veil {
+  animation: none;
+  opacity: 1;
+}
+
+.landing-overlay--cloud .cloud-curtain__mist {
+  animation: none;
+  opacity: 1;
+  transform: translate(0, 0) rotate(var(--cloud-rotation)) scale(var(--cloud-scale));
+}
+
+.route-cloud--closing {
+  --cloud-duration: 1.3s;
+}
+
+.route-cloud--lifting {
+  --cloud-duration: 1.65s;
+  animation: cloud-clear var(--cloud-duration) linear forwards;
+}
+
+.route-cloud--lifting .cloud-curtain__veil {
+  animation: cloud-veil-out var(--cloud-duration) ease-out forwards;
+}
+
+.route-cloud--lifting .cloud-curtain__mist {
+  animation: cloud-drift-out var(--cloud-duration) ease-out forwards;
+}
+
+@keyframes cloud-veil-in {
+  0% { opacity: 0; }
+  25% { opacity: .15; }
+  60% { opacity: .65; }
+  100% { opacity: 1; }
+}
+
+@keyframes cloud-drift-in {
+  0% { opacity: 0; transform: translate(var(--cloud-x), var(--cloud-y)) rotate(var(--cloud-rotation)) scale(.7); }
+  25% { opacity: .6; }
+  60% { opacity: 1; }
+  100% { opacity: 1; transform: translate(0, 0) rotate(var(--cloud-rotation)) scale(var(--cloud-scale)); }
+}
+
+@keyframes cloud-veil-out {
+  0% { opacity: 1; }
+  30% { opacity: .75; }
+  90%, 100% { opacity: 0; }
+}
+
+@keyframes cloud-drift-out {
+  0% { opacity: 1; transform: translate(0, 0) rotate(var(--cloud-rotation)) scale(var(--cloud-scale)); }
+  35% { opacity: .9; }
+  100% { opacity: 0; transform: translate(var(--cloud-x), var(--cloud-y)) rotate(var(--cloud-rotation)) scale(2.1); }
+}
+
+@keyframes cloud-clear {
+  to { visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud-curtain__mist { display: none; }
+  .cloud-curtain__veil { animation-timing-function: linear; }
+}

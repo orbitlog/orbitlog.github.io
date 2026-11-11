@@ -19,6 +19,7 @@ export default function RotatingSky() {
     (texture) =>
       new THREE.MeshBasicMaterial({
         map: texture,
+        color: '#7b8799',
         side: THREE.BackSide,
         depthWrite: false,
       })

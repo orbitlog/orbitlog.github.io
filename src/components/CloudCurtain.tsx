@@ -1,26 +1,18 @@
 import type { CSSProperties } from 'react';
-
-const puffIndexes = Array.from({ length: 12 }, (_, index) => index);
+import './CloudCurtain.css';
 
 interface CloudCurtainProps {
   className?: string;
-  panelClassName?: string;
   style?: CSSProperties;
 }
 
-export default function CloudCurtain({ className = '', panelClassName = 'cloud-curtain__panel', style }: CloudCurtainProps) {
+export default function CloudCurtain({ className = '', style }: CloudCurtainProps) {
   return (
-    <div className={className} style={style}>
-      <div className={`${panelClassName} ${panelClassName}--left`}>
-        {puffIndexes.map((index) => (
-          <span key={index} />
-        ))}
-      </div>
-      <div className={`${panelClassName} ${panelClassName}--right`}>
-        {puffIndexes.map((index) => (
-          <span key={index} />
-        ))}
-      </div>
+    <div className={`cloud-curtain ${className}`} style={style} aria-hidden="true">
+      <div className="cloud-curtain__veil" />
+      <div className="cloud-curtain__mist cloud-curtain__mist--far" />
+      <div className="cloud-curtain__mist cloud-curtain__mist--middle" />
+      <div className="cloud-curtain__mist cloud-curtain__mist--near" />
     </div>
   );
 }

@@ -89,7 +89,8 @@ export default function CameraController({ children }: { children: React.ReactNo
    * 鼠标按下拖动
    * @param e 
    */
-  const handleMouseDown = (e: MouseEvent) => {
+  const handleMouseDown = (e: PointerEvent) => {
+    if (isAnimating.current || !e.isPrimary || e.button !== 0) return;
     isDragging.current = true
     lastPos.current = { x: e.clientX, y: e.clientY };
     gl.domElement.style.cursor = 'grabbing';
@@ -108,8 +109,8 @@ export default function CameraController({ children }: { children: React.ReactNo
    * @param e 
    * @returns 
    */
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!isDragging.current) return;
+  const handleMouseMove = (e: PointerEvent) => {
+    if (!isDragging.current || isAnimating.current || !e.isPrimary) return;
     const deltaX = e.clientX - lastPos.current.x;
     const deltaY = e.clientY - lastPos.current.y;
 
@@ -139,6 +140,7 @@ export default function CameraController({ children }: { children: React.ReactNo
    * @param e 
    */
   const handleWheel = (e: WheelEvent) => {
+    if (isAnimating.current) return;
     const dir = new THREE.Vector3().subVectors(camera.position, target.current).normalize();
     const distance = camera.position.distanceTo(target.current);
     let newDistance = distance + e.deltaY * 0.01;
@@ -177,18 +179,21 @@ export default function CameraController({ children }: { children: React.ReactNo
   useEffect(() => {
     const canvas = gl.domElement;
     canvas.style.cursor = 'grab';
+    canvas.style.touchAction = 'none';
 
-    canvas.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
-    window.addEventListener('mousemove', handleMouseMove);
+    canvas.addEventListener('pointerdown', handleMouseDown);
+    window.addEventListener('pointerup', handleMouseUp);
+    window.addEventListener('pointercancel', handleMouseUp);
+    window.addEventListener('pointermove', handleMouseMove);
     canvas.addEventListener('wheel', handleWheel);
     window.addEventListener('keydown', handleKeyDown);
     window.addEventListener('keyup', handleKeyUp);
 
     return () => {
-      canvas.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
-      window.removeEventListener('mousemove', handleMouseMove);
+      canvas.removeEventListener('pointerdown', handleMouseDown);
+      window.removeEventListener('pointerup', handleMouseUp);
+      window.removeEventListener('pointercancel', handleMouseUp);
+      window.removeEventListener('pointermove', handleMouseMove);
       canvas.removeEventListener('wheel', handleWheel);
       window.removeEventListener('keydown', handleKeyDown);
       window.removeEventListener('keyup', handleKeyUp);

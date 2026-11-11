@@ -21,5 +21,5 @@ export default function OrbitEllipse({ a, b, segments = 128, color = 'white' }: 
     return pts;
   }, [a, b, segments]);
 
-  return <Line points={points} color={color} lineWidth={1} />;
+  return <Line points={points} color={color} lineWidth={0.6} transparent opacity={0.18} />;
 }

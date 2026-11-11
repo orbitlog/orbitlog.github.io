@@ -36,7 +36,7 @@ export default function PlanetModule() {
   return (
     <main className={`module-page ${themeClass}`}>
       {isLeaving && (
-        <CloudCurtain className="route-cloud route-cloud--closing" panelClassName="route-cloud__panel" />
+        <CloudCurtain className="route-cloud route-cloud--closing" />
       )}
 
       <button className="back-btn" onClick={handleBack} disabled={isLeaving}>
