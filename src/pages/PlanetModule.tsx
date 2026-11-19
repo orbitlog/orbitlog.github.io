@@ -1,95 +1,102 @@
-import { useMemo, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { blogPosts, getModuleContent, getPlanet } from '@/content/modules';
+import { useEffect, useRef, useState } from 'react';
+import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
 import CloudCurtain from '@/components/CloudCurtain';
-import './Page.css';
+import { planetPageThemes } from '@/content/planet-pages';
+import type { PlanetPageTheme } from '@/content/planet-pages';
+import { PLANET_DATA } from '@/types/planet';
+import type { PlanetInfo } from '@/types/planet';
+import './PlanetModule.css';
 
-const themeClassByPlanet: Record<string, string> = {
-  sun: 'module-page--sun',
-  mercury: 'module-page--mercury',
-  venus: 'module-page--venus',
-  earth: 'module-page--earth',
-  mars: 'module-page--mars',
-  jupiter: 'module-page--jupiter',
-  saturn: 'module-page--saturn',
-  uranus: 'module-page--uranus',
-  neptune: 'module-page--neptune',
-};
+const destinations = Object.values(PLANET_DATA).filter((planet) => planet.id !== 'sun');
 
-export default function PlanetModule() {
+function PlanetDestination({ planet, theme }: { planet: PlanetInfo; theme: PlanetPageTheme }) {
   const navigate = useNavigate();
-  const { planetId = 'sun' } = useParams();
-  const planet = getPlanet(planetId);
-  const content = getModuleContent(planet.id);
-  const themeClass = themeClassByPlanet[planet.id] ?? themeClassByPlanet.sun;
   const [isLeaving, setIsLeaving] = useState(false);
+  const leaving = useRef(false);
+  const returnTimer = useRef<number | undefined>(undefined);
+  const index = destinations.findIndex((item) => item.id === planet.id);
+  const previous = destinations[(index - 1 + destinations.length) % destinations.length];
+  const next = destinations[(index + 1) % destinations.length];
 
-  const visiblePosts = useMemo(() => blogPosts.slice(0, 4), []);
+  useEffect(() => () => window.clearTimeout(returnTimer.current), []);
 
-  const handleBack = () => {
+  const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const returnToSystem = () => {
+    if (leaving.current) return;
+    leaving.current = true;
     setIsLeaving(true);
-    window.setTimeout(() => {
+    returnTimer.current = window.setTimeout(() => {
       navigate('/', { state: { returnFrom: planet.id } });
-    }, 1300);
+    }, reducedMotion() ? 0 : 1300);
   };
+  const explore = () => document.getElementById('planet-collection')?.scrollIntoView({
+    behavior: reducedMotion() ? 'auto' : 'smooth',
+    block: 'start',
+  });
 
   return (
-    <main className={`module-page ${themeClass}`}>
-      {isLeaving && (
-        <CloudCurtain className="route-cloud route-cloud--closing" />
-      )}
+    <main className={`destination-page destination-page--${planet.id}`}>
+      {isLeaving && <CloudCurtain className="route-cloud route-cloud--closing" />}
+      <header className="destination-nav">
+        <button className="destination-wordmark" onClick={returnToSystem} disabled={isLeaving} aria-label="OrbitLog · 返回太阳系">ORBITLOG</button>
+        <nav className="destination-location" aria-label="当前位置">
+          <span>{planet.nameCN}</span><span aria-hidden="true">/</span><span>{planet.module}</span>
+        </nav>
+        <button className="destination-return" onClick={returnToSystem} disabled={isLeaving}>{isLeaving ? '正在返航' : '返回太阳系'}</button>
+      </header>
 
-      <button className="back-btn" onClick={handleBack} disabled={isLeaving}>
-        返回太阳系
-      </button>
+      <div inert={isLeaving}>
+        <section className="destination-hero destination-inner" aria-labelledby="destination-title">
+          <div className="destination-hero-copy">
+            <p className="destination-eyebrow">{theme.eyebrow}</p>
+            <h1 id="destination-title">{planet.nameCN}<em lang="en">{planet.name}</em></h1>
+            <p className="destination-module">{planet.module}</p>
+            <p className="destination-subtitle">{theme.subtitle}</p>
+            <p className="destination-introduction">{theme.introduction}</p>
+            <button className="destination-explore" onClick={explore}>走进{planet.nameCN}<span className="destination-explore-line" aria-hidden="true" /></button>
+          </div>
 
-      <section className="module-hero">
-        <p className="module-orbit-label">{planet.nameCN} / {planet.name}</p>
-        <h1>{content.headline}</h1>
-        <p>{content.subhead}</p>
-      </section>
+          <div className="destination-observatory" aria-hidden="true">
+            <div className="destination-orbit destination-orbit--outer" />
+            <div className="destination-orbit destination-orbit--inner" />
+            <div className="destination-orbit-axis" />
+            <div className="destination-ring destination-ring--back" />
+            <div className="destination-globe"><div className="destination-clouds" /></div>
+            <div className="destination-ring destination-ring--front" />
+            <span className="destination-art-name">{planet.name.toUpperCase()}</span>
+            <span className="destination-art-coordinate">{planet.distance.toFixed(2)} AU / SOLAR DISTANCE</span>
+          </div>
 
-      <section className="module-layout">
-        <div className="module-main">
-          {content.sections.map((section) => (
-            <article className="module-block" key={section.title}>
-              <h2>{section.title}</h2>
-              <p>{section.text}</p>
-              {section.items && (
-                <div className="module-chip-grid">
-                  {section.items.map((item) => (
-                    <span key={item}>{item}</span>
-                  ))}
-                </div>
-              )}
-            </article>
-          ))}
+          <div className="destination-hero-footnote"><span>ORBITLOG / {planet.name.toUpperCase()}</span><p>{theme.observation}</p><span>{planet.module}</span></div>
+        </section>
 
-          {planet.id === 'mercury' && (
-            <article className="module-block">
-              <h2>最新文章</h2>
-              <div className="post-list">
-                {visiblePosts.map((post) => (
-                  <a href={`/module/mercury#${post.slug}`} className="post-item" key={post.slug}>
-                    <span>{post.date}</span>
-                    <strong>{post.title}</strong>
-                    <p>{post.summary}</p>
-                  </a>
-                ))}
-              </div>
-            </article>
-          )}
-        </div>
+        <section className="destination-collection destination-inner" id="planet-collection" aria-labelledby="collection-title">
+          <header className="destination-collection-heading">
+            <div><p className="destination-eyebrow">{theme.collectionEnglish}</p><h2 id="collection-title">{theme.collection}</h2></div>
+            <span className="destination-empty-label">尚未收录</span>
+          </header>
+          <div className="destination-empty">
+            <div className="destination-empty-art" aria-hidden="true"><span /><span /><span /><span /></div>
+            <div className="destination-empty-copy"><p className="destination-empty-caption">A LITTLE SPACE FOR WHAT COMES NEXT</p><h3>{theme.emptyTitle}</h3><p>{theme.emptyDescription}</p></div>
+          </div>
+        </section>
 
-        <aside className="module-side">
-          <h2>文件放置</h2>
-          <ul>
-            {content.storage.map((item) => (
-              <li key={item}>{item}</li>
-            ))}
-          </ul>
-        </aside>
-      </section>
+        <nav className="destination-neighbors destination-inner" aria-label="继续探索星球">
+          <Link to={previous.route}><span>上一站 / {previous.name}</span><strong>{previous.nameCN}<small>{previous.module}</small></strong></Link>
+          <Link to="/module/sun" className="destination-home"><span>回到光的中心</span><strong>太阳<small>站点核心</small></strong></Link>
+          <Link to={next.route}><span>下一站 / {next.name}</span><strong>{next.nameCN}<small>{next.module}</small></strong></Link>
+        </nav>
+
+        <footer className="destination-footer destination-inner"><div><span>ORBITLOG / {planet.name.toUpperCase()}</span><p>{theme.footer}</p></div><button onClick={() => window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' })}>回到顶部</button></footer>
+      </div>
     </main>
   );
+}
+
+export default function PlanetModule() {
+  const { planetId = 'sun' } = useParams();
+  const planet = PLANET_DATA[planetId];
+  const theme = planetPageThemes[planetId];
+  if (!planet || !theme) return <Navigate to="/module/sun" replace />;
+  return <PlanetDestination key={planet.id} planet={planet} theme={theme} />;
 }
