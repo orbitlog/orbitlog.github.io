@@ -145,7 +145,7 @@
   .mars-platform { left: -10%; right: -10%; bottom: 42px; height: 28px; }
   .mars-platform::before { inset: -25px -1px 27px; height: 24px; }
   .mars-platform > span { width: 28%; height: 1px; bottom: 8px; }
-  .mars-project-index { justify-content: space-between; gap: 8px; padding: 15px 0 18px; }
+  .mars-project-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 4px 12px; padding: 15px 0 18px; }
   .mars-index-label { display: none; }
   .mars-project-index button { font-size: 12px; gap: 6px; }
   .mars-project-index button > span { font-size: 8px; }

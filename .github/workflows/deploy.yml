@@ -52,6 +52,22 @@ jobs:
         working-directory: .projects/relaverse
         run: npm run build -- --base=/relaverse/
 
+      - name: Checkout PushSheet Studio
+        uses: actions/checkout@v3
+        with:
+          repository: orbitlog/pushsheet-studio
+          ref: main
+          path: .projects/pushsheet-studio
+          persist-credentials: false
+
+      - name: Install PushSheet Studio dependencies
+        working-directory: .projects/pushsheet-studio
+        run: npm ci
+
+      - name: Build PushSheet Studio at its public path
+        working-directory: .projects/pushsheet-studio
+        run: npm run build -- --base=/pushsheet-studio/
+
       - name: Assemble GitHub Pages site
         run: npm run pages:prepare
 

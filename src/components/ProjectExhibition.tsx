@@ -1,5 +1,5 @@
-import type { CSSProperties, PointerEvent } from 'react';
-import { projects } from '@/content/projects';
+import type { CSSProperties, PointerEvent, ReactElement } from 'react';
+import { projects, type Project } from '@/content/projects';
 import './ProjectExhibition.css';
 
 interface ExhibitionProps {
@@ -82,11 +82,21 @@ function ParticleCover() {
   </svg>;
 }
 
-function CardCover({ index }: { index: number }) {
-  if (index === 0) return <RelationCover />;
-  if (index === 1) return <TerminalCover />;
-  return <ParticleCover />;
+function SheetCover() {
+  return <span className="sheet-cover" aria-hidden="true">
+    <span className="sheet-cover-page sheet-cover-page--back" />
+    <span className="sheet-cover-page sheet-cover-page--front">
+      <span className="sheet-cover-grid" />
+    </span>
+  </span>;
 }
+
+const projectCovers = {
+  relaverse: RelationCover,
+  'node-memory': TerminalCover,
+  img2particles: ParticleCover,
+  'pushsheet-studio': SheetCover,
+} satisfies Record<Project['id'], () => ReactElement>;
 
 function resetTilt(event: PointerEvent<HTMLButtonElement>) {
   event.currentTarget.style.setProperty('--pointer-rx', '0deg');
@@ -108,21 +118,24 @@ export default function ProjectExhibition({ active, onSelect, paused }: Exhibiti
   }
 
   return <div className={`spatial-card-gallery${paused ? ' is-paused' : ''}`} role="group" aria-label="立体项目卡片">
-    {projects.map((project, index) => <div className={`spatial-card-position spatial-card-position--${index}${active === index ? ' is-selected' : ''}`} key={project.id} style={{ '--card-index': index } as CSSProperties}>
-      <span className="spatial-card-shadow" aria-hidden="true" />
-      <button className={`spatial-card spatial-card--${project.id}`} onClick={() => onSelect(index)} onPointerMove={tiltCard} onPointerLeave={resetTilt} onPointerCancel={resetTilt} aria-label={`选择项目 ${project.name}`} aria-pressed={active === index} aria-controls="exhibit-detail">
-        <span className="spatial-card-back" aria-hidden="true" />
-        <span className="spatial-card-side spatial-card-side--left" aria-hidden="true" />
-        <span className="spatial-card-side spatial-card-side--right" aria-hidden="true" />
-        <span className="spatial-card-side spatial-card-side--bottom" aria-hidden="true" />
-        <span className="spatial-card-face">
-          <span className="spatial-card-topline"><span>ORBITLOG — SELECTED WORK</span><span>{String(index + 1).padStart(2, '0')}</span></span>
-          <span className="spatial-card-cover"><CardCover index={index} /></span>
-          <span className="spatial-card-caption"><strong>{project.name}</strong><span>{project.subtitle}</span></span>
-          <span className="spatial-card-bottomline"><span>{project.category}</span><span className="spatial-card-arrow" aria-hidden="true">↗</span></span>
-          <span className="spatial-card-shine" aria-hidden="true" />
-        </span>
-      </button>
-    </div>)}
+    {projects.map((project, index) => {
+      const Cover = projectCovers[project.id];
+      return <div className={`spatial-card-position spatial-card-position--${index}${active === index ? ' is-selected' : ''}`} key={project.id} style={{ '--card-index': index } as CSSProperties}>
+        <span className="spatial-card-shadow" aria-hidden="true" />
+        <button className={`spatial-card spatial-card--${project.id}`} onClick={() => onSelect(index)} onPointerMove={tiltCard} onPointerLeave={resetTilt} onPointerCancel={resetTilt} aria-label={`选择项目 ${project.name}`} aria-pressed={active === index} aria-controls="exhibit-detail">
+          <span className="spatial-card-back" aria-hidden="true" />
+          <span className="spatial-card-side spatial-card-side--left" aria-hidden="true" />
+          <span className="spatial-card-side spatial-card-side--right" aria-hidden="true" />
+          <span className="spatial-card-side spatial-card-side--bottom" aria-hidden="true" />
+          <span className="spatial-card-face">
+            <span className="spatial-card-topline"><span>ORBITLOG — SELECTED WORK</span><span>{String(index + 1).padStart(2, '0')}</span></span>
+            <span className="spatial-card-cover"><Cover /></span>
+            <span className="spatial-card-caption"><strong>{project.name}</strong><span>{project.subtitle}</span></span>
+            <span className="spatial-card-bottomline"><span>{project.category}</span><span className="spatial-card-arrow" aria-hidden="true">↗</span></span>
+            <span className="spatial-card-shine" aria-hidden="true" />
+          </span>
+        </button>
+      </div>;
+    })}
   </div>;
 }

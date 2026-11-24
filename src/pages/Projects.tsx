@@ -125,7 +125,7 @@ export default function Projects() {
         <img className="mars-landscape mars-artifacts-image" src="/media/projects/mars/landing.jpg" width="1672" height="941" loading="lazy" decoding="async" alt="" aria-hidden="true" />
         <div className="mars-artifacts-shade" aria-hidden="true" />
         <div className="mars-section-inner mars-artifacts-inner">
-          <header className="mars-artifacts-header mars-reveal"><div><p className="mars-eyebrow">03 <span>/</span> CREATION</p><h2 id="artifacts-title">作品档案</h2><p className="mars-section-english">SELECTED PROJECTS / 01—03</p></div><button className="mars-motion" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? '播放场景动态' : '暂停场景动态'}><span aria-hidden="true">{paused ? '▷' : 'Ⅱ'}</span>{paused ? '播放动态' : '暂停动态'}</button></header>
+          <header className="mars-artifacts-header mars-reveal"><div><p className="mars-eyebrow">03 <span>/</span> CREATION</p><h2 id="artifacts-title">作品档案</h2><p className="mars-section-english">SELECTED PROJECTS / 01—{String(projects.length).padStart(2, '0')}</p></div><button className="mars-motion" onClick={() => setPaused(!paused)} aria-pressed={paused} aria-label={paused ? '播放场景动态' : '暂停场景动态'}><span aria-hidden="true">{paused ? '▷' : 'Ⅱ'}</span>{paused ? '播放动态' : '暂停动态'}</button></header>
 
           <div className="mars-artifacts-stage"><div className="mars-platform" aria-hidden="true"><span /></div><ProjectExhibition active={active} onSelect={setActive} paused={paused} /></div>
 

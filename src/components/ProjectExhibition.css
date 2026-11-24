@@ -1,11 +1,13 @@
 .spatial-card-gallery { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center; gap: clamp(18px, 3%, 40px); padding: 25px 3% 85px; perspective: 1500px; perspective-origin: 50% 42%; transform-style: preserve-3d; }
-.spatial-card-position { --card-y: 6px; --card-rz: -2deg; --card-ry: -13deg; --card-rx: 2deg; --card-lift: 0px; position: relative; width: 29%; max-width: 320px; aspect-ratio: .67; flex-shrink: 0; transform-style: preserve-3d; animation: spatialCardFloat 9s ease-in-out infinite; animation-delay: calc(var(--card-index) * -2.4s); }
+.spatial-card-position { --card-y: 6px; --card-rz: -2deg; --card-ry: -13deg; --card-rx: 2deg; --card-lift: 0px; position: relative; width: 100%; min-width: 0; max-width: 320px; aspect-ratio: .67; flex: 1 1 0; transform-style: preserve-3d; animation: spatialCardFloat 9s ease-in-out infinite; animation-delay: calc(var(--card-index) * -2.4s); }
 .spatial-card-position--1 { --card-y: -12px; --card-rz: 1deg; --card-ry: -10deg; }
 .spatial-card-position--2 { --card-y: 14px; --card-rz: 3deg; --card-ry: -16deg; }
+.spatial-card-position--3 { --card-y: -5px; --card-rz: 2deg; --card-ry: -10deg; }
 .spatial-card-position.is-selected { --card-lift: -12px; }
 .spatial-card { --pointer-rx: 0deg; --pointer-ry: 0deg; --shine-x: 50%; --shine-y: 25%; --card-text: #342719; --card-face: #c9b08b; --card-edge: #6d4d2e; display: block; position: absolute; inset: 0; width: 100%; height: 100%; padding: 0; border: 0; border-radius: 2px; background: transparent; text-align: left; color: var(--card-text); transform-style: preserve-3d; transform: rotateX(calc(var(--card-rx) + var(--pointer-rx))) rotateY(calc(var(--card-ry) + var(--pointer-ry))) rotateZ(var(--card-rz)); transition: transform .4s ease, scale .4s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
 .spatial-card--node-memory { --card-text: #edddba; --card-face: #1e2b20; --card-edge: #182019; }
 .spatial-card--img2particles { --card-text: #f1d7ae; --card-face: #5c3322; --card-edge: #3d2519; }
+.spatial-card--pushsheet-studio { --card-text: #e4eddc; --card-face: #28443a; --card-edge: #152d26; }
 .spatial-card:hover { scale: 1.025; }
 .spatial-card-face { position: absolute; inset: 0; display: block; border: 1px solid #dbb78988; border-radius: 2px; background: var(--card-face); overflow: hidden; transform: translateZ(6px); box-shadow: inset 0 0 30px #1e140a15; }
 .is-selected .spatial-card-face { border-color: #f0c38d; }
@@ -20,8 +22,14 @@
 .spatial-card-cover { position: absolute; inset: 0; display: block; overflow: hidden; mask-image: linear-gradient(#000 0%, #000 57%, transparent 88%); }
 .spatial-card-cover svg { height: 100%; width: 100%; display: block; }
 .spatial-card-cover svg > text { display: none; }
+.sheet-cover { position: absolute; inset: 0; background: radial-gradient(ellipse at 50% 28%, #65967b 0%, #2b4a3e 56%, #28443a 78%); }
+.sheet-cover-page { position: absolute; left: 22%; top: 17%; width: 58%; aspect-ratio: 1.28; border: 1px solid #eaf2db80; border-radius: 5%; background: #dce9d8; box-shadow: 0 8px 22px #0a211c66; }
+.sheet-cover-page--back { transform: translate(10%, -13%) rotate(13deg); background: #9bbda2; }
+.sheet-cover-page--front { transform: rotate(-9deg); }
+.sheet-cover-grid { position: absolute; inset: 14% 9%; border: 1px solid #5a816f; background: linear-gradient(#507d66 0 20%, transparent 20%), repeating-linear-gradient(90deg, transparent 0 calc(25% - 1px), #7d9c8a calc(25% - 1px) 25%), repeating-linear-gradient(transparent 0 calc(20% - 1px), #7d9c8a calc(20% - 1px) 20%); }
 .spatial-card-caption { position: absolute; z-index: 2; bottom: 58px; left: 25px; right: 20px; display: flex; flex-direction: column; gap: 13px; color: var(--card-text); }
 .spatial-card-caption strong { font-family: 'Baskerville', 'Times New Roman', serif; font-size: clamp(28px, 3vw, 43px); font-weight: 400; line-height: 1; letter-spacing: -1.3px; }
+.spatial-card--pushsheet-studio .spatial-card-caption strong { font-size: clamp(23px, 2.5vw, 35px); }
 .spatial-card-caption > span { font-family: 'Songti SC', 'STSong', serif; font-size: 14px; letter-spacing: 2px; font-weight: 400; }
 .spatial-card-bottomline { position: absolute; left: 25px; right: 22px; bottom: 20px; display: flex; justify-content: space-between; align-items: center; color: var(--card-text); opacity: .7; font-size: 8px; font-weight: 400; }
 .spatial-card-arrow { font-size: 23px; line-height: 1; }
@@ -29,9 +37,15 @@
 .spatial-card-gallery.is-paused .spatial-card-position { animation-play-state: paused; }
 .spatial-card-gallery.is-paused .spatial-card { --pointer-rx: 0deg !important; --pointer-ry: 0deg !important; }
 @keyframes spatialCardFloat { 0%, 100% { transform: translate3d(0, calc(var(--card-y) + var(--card-lift)), 0); } 50% { transform: translate3d(0, calc(var(--card-y) + var(--card-lift) - 5px), 0); } }
-@container (max-width: 590px) {
+@container (740px < width < 1000px) {
+  .spatial-card-caption { left: 16px; right: 14px; bottom: 48px; gap: 8px; }
+  .spatial-card-caption strong { font-size: clamp(22px, 3cqi, 29px); }
+  .spatial-card-caption > span { font-size: 12px; letter-spacing: 1px; }
+  .spatial-card-topline, .spatial-card-bottomline { left: 16px; right: 14px; }
+}
+@container (max-width: 740px) {
   .spatial-card-gallery { padding: 0 0 70px; }
-  .spatial-card-position { width: 70%; max-width: 260px; }
+  .spatial-card-position { width: 70%; max-width: 260px; flex: 0 0 auto; }
   .spatial-card-position:not(.is-selected) { display: none; }
   .spatial-card-position.is-selected { --card-y: 0px; --card-lift: 0px; --card-ry: -12deg; --card-rz: -2deg; }
 }

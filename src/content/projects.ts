@@ -1,7 +1,7 @@
 export type ProjectCategory = '应用' | '开发工具' | '视觉实验';
 
 export interface Project {
-  id: 'relaverse' | 'node-memory' | 'img2particles';
+  id: 'relaverse' | 'node-memory' | 'img2particles' | 'pushsheet-studio';
   name: string;
   subtitle: string;
   category: ProjectCategory;
@@ -45,5 +45,16 @@ export const projects: Project[] = [
     repository: 'https://github.com/orbitlog/img2particles',
     href: 'https://github.com/orbitlog/img2particles#readme',
     action: '探索组件',
+  },
+  {
+    id: 'pushsheet-studio',
+    name: 'PushSheet Studio',
+    subtitle: '多语言 Push 文案工作台',
+    category: '应用',
+    description: '上传表格或粘贴多语言文案，按模板批量生成 Excel。保留模板格式和 Emoji，文件全程在浏览器内处理。',
+    tags: ['Vue', 'Excel', '本地处理'],
+    repository: 'https://github.com/orbitlog/pushsheet-studio',
+    href: '/pushsheet-studio/',
+    action: '打开文案工作台',
   },
 ];

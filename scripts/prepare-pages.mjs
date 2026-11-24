@@ -4,18 +4,27 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const output = resolve(root, 'dist');
-const relaverseOutput = resolve(root, process.argv[2] ?? '.projects/relaverse/dist');
+const apps = [
+  { slug: 'relaverse', build: process.argv[2] },
+  { slug: 'pushsheet-studio', build: process.argv[3], requiredFile: 'templates/push-default.xlsx' },
+];
 
-// Fail before publishing if either application has not been built.
+// Validate all inputs before modifying the deployment directory.
 await access(resolve(output, 'index.html'));
-await access(resolve(relaverseOutput, 'index.html'));
-const relaverseHtml = await readFile(resolve(relaverseOutput, 'index.html'), 'utf8');
-if (!relaverseHtml.includes('/relaverse/assets/')) {
-  throw new Error('Build Relaverse with: npm run build -- --base=/relaverse/');
-}
+const appBuilds = await Promise.all(apps.map(async ({ slug, build, requiredFile }) => {
+  const source = resolve(root, build ?? `.projects/${slug}/dist`);
+  const html = await readFile(resolve(source, 'index.html'), 'utf8');
+  if (!html.includes(`/${slug}/assets/`)) {
+    throw new Error(`Build ${slug} with: npm run build -- --base=/${slug}/`);
+  }
+  if (requiredFile) await access(resolve(source, requiredFile));
+  return { source, destination: resolve(output, slug) };
+}));
 
-await rm(resolve(output, 'relaverse'), { recursive: true, force: true });
-await cp(relaverseOutput, resolve(output, 'relaverse'), { recursive: true });
+for (const { source, destination } of appBuilds) {
+  await rm(destination, { recursive: true, force: true });
+  await cp(source, destination, { recursive: true });
+}
 
 // GitHub Pages serves these directory indexes on direct visits and refreshes.
 const planets = ['sun', 'mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn', 'uranus', 'neptune'];
@@ -28,4 +37,4 @@ for (const route of routes) {
   await copyFile(resolve(output, 'index.html'), resolve(destination, 'index.html'));
 }
 await writeFile(resolve(output, '.nojekyll'), '');
-console.log('Prepared GitHub Pages: blog routes + /relaverse/');
+console.log(`Prepared GitHub Pages: blog routes + ${apps.map(({ slug }) => `/${slug}/`).join(' + ')}`);
