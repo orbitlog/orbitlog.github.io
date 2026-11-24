@@ -51,7 +51,7 @@ export const projects: Project[] = [
     name: 'PushSheet Studio',
     subtitle: '多语言 Push 文案工作台',
     category: '应用',
-    description: '支持按表格行拆分，也可上传 TXT 或粘贴 EN / ES 分段文案，按名称导出 Excel。多份文件自动打包为 ZIP。',
+    description: '上传表格、TXT 或粘贴分段文案，自动匹配模板中的语言列并导出 Excel。多份文件自动打包为 ZIP。',
     tags: ['Vue', 'Excel', '本地处理'],
     repository: 'https://github.com/orbitlog/pushsheet-studio',
     href: '/pushsheet-studio/',
