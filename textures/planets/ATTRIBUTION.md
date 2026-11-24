@@ -10,14 +10,16 @@ https://creativecommons.org/licenses/by/4.0/
 
 Files used:
 
-- `sun.jpg`
-- `mercury.jpg`
-- `venus.jpg`
-- `earth.jpg`
-- `earth_clouds.jpg`
-- `mars.jpg`
-- `jupiter.jpg`
-- `saturn.jpg`
+- `sun.webp`
+- `mercury.webp`
+- `venus.webp`
+- `earth.webp`
+- `earth_clouds.webp`
+- `mars.webp`
+- `jupiter.webp`
+- `saturn.webp`
 - `saturn_ring.png`
-- `uranus.jpg`
-- `neptune.jpg`
+- `uranus.webp`
+- `neptune.webp`
+
+Surface maps are WebP derivatives of the original JPEG textures (quality 82, original 2048 × 1024 resolution). Saturn’s ring remains the original PNG.
