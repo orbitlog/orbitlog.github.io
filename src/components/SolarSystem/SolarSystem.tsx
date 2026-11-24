@@ -1,3 +1,4 @@
+import { Suspense } from 'react';
 import Sun from './Sun';
 import Mercury from './Plantes/Mercury';
 import Venus from './Plantes/Venus';
@@ -13,18 +14,16 @@ interface SolarSystemProps {
   onReturnComplete?: () => void;
 }
 
+const planets = [Sun, Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, Neptune];
+
 export default function SolarSystem({ returnTargetId, onReturnComplete }: SolarSystemProps) {
   return (
     <>
-      <Sun returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Mercury returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Venus returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Earth returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Mars returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Jupiter returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Saturn returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Uranus returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
-      <Neptune returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
+      {planets.map((Planet, index) => (
+        <Suspense key={index} fallback={null}>
+          <Planet returnTargetId={returnTargetId} onReturnComplete={onReturnComplete} />
+        </Suspense>
+      ))}
     </>
   );
 }

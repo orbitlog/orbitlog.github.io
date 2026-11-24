@@ -5,7 +5,7 @@
   --destination-accent: #edc78d;
   --destination-line: #edc78d30;
   --destination-glow: #b67c3530;
-  --destination-texture: url('/textures/planets/venus.jpg');
+  --destination-texture: url('/textures/planets/venus.webp');
   min-height: 100svh;
   position: relative;
   isolation: isolate;
@@ -21,7 +21,7 @@
   --destination-accent: #9fd6c3;
   --destination-line: #9fd6c330;
   --destination-glow: #398e9c30;
-  --destination-texture: url('/textures/planets/earth.jpg');
+  --destination-texture: url('/textures/planets/earth.webp');
 }
 .destination-page--jupiter {
   --destination-bg: #2a201d;
@@ -30,7 +30,7 @@
   --destination-accent: #e3b28d;
   --destination-line: #e3b28d30;
   --destination-glow: #b57a4b30;
-  --destination-texture: url('/textures/planets/jupiter.jpg');
+  --destination-texture: url('/textures/planets/jupiter.webp');
 }
 .destination-page--saturn {
   --destination-bg: #25222a;
@@ -39,7 +39,7 @@
   --destination-accent: #e1c39c;
   --destination-line: #e1c39c30;
   --destination-glow: #b79b6c25;
-  --destination-texture: url('/textures/planets/saturn.jpg');
+  --destination-texture: url('/textures/planets/saturn.webp');
 }
 .destination-page--uranus {
   --destination-bg: #14292e;
@@ -48,7 +48,7 @@
   --destination-accent: #9ddce1;
   --destination-line: #9ddce130;
   --destination-glow: #59b7c027;
-  --destination-texture: url('/textures/planets/uranus.jpg');
+  --destination-texture: url('/textures/planets/uranus.webp');
 }
 .destination-page--neptune {
   --destination-bg: #131f39;
@@ -57,7 +57,7 @@
   --destination-accent: #a6baff;
   --destination-line: #a6baff30;
   --destination-glow: #456fd33a;
-  --destination-texture: url('/textures/planets/neptune.jpg');
+  --destination-texture: url('/textures/planets/neptune.webp');
 }
 .destination-page *, .destination-page *::before, .destination-page *::after { box-sizing: border-box; }
 .destination-page button, .destination-page a { color: inherit; font: inherit; -webkit-tap-highlight-color: transparent; }
@@ -118,7 +118,7 @@
 .destination-page--venus .destination-globe { filter: sepia(.15); box-shadow: inset -35px -12px 48px #422b0fd9, inset 8px 4px 20px #fff3, 0 0 75px #d9a75520; }
 .destination-page--venus .destination-observatory::after { content: ''; position: absolute; z-index: 3; inset: 20%; border-radius: 50%; background: repeating-linear-gradient(165deg, transparent 0 12%, #ffe2ad12 18%, transparent 26%); filter: blur(4px); pointer-events: none; }
 .destination-page--earth .destination-globe { transform: rotate(23deg); box-shadow: inset -35px -12px 48px #000c, inset 3px 3px 8px #c1e8ff66, 0 0 0 2px #95d4ff19, 0 0 65px #74b8cb23; }
-.destination-page--earth .destination-clouds { position: absolute; inset: 0; border-radius: 50%; background: url('/textures/planets/earth_clouds.jpg') 35% center / auto 100%; mix-blend-mode: screen; opacity: .45; }
+.destination-page--earth .destination-clouds { position: absolute; inset: 0; border-radius: 50%; background: url('/textures/planets/earth_clouds.webp') 35% center / auto 100%; mix-blend-mode: screen; opacity: .45; }
 .destination-page--jupiter .destination-globe { inset: 17%; transform: rotate(-7deg); }
 .destination-page--jupiter .destination-orbit--inner { inset: 3%; }
 .destination-page--jupiter .destination-orbit--outer { inset: -2%; }

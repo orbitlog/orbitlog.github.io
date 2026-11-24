@@ -72,7 +72,7 @@ export default function SystemNavigation({ isReturning }: { isReturning: boolean
               aria-pressed={selectedPlanet?.id === planet.id}
             >
               <span className="system-destination-number">{String(index).padStart(2, '0')}</span>
-              <span className={`system-planet-thumb system-planet-thumb--${planet.id}`} style={{ backgroundImage: `url('/textures/planets/${planet.id}.jpg')` }} aria-hidden="true" />
+              <span className={`system-planet-thumb system-planet-thumb--${planet.id}`} style={{ backgroundImage: `url('/textures/planets/${planet.id}.webp')` }} aria-hidden="true" />
               <span className="system-destination-copy"><strong>{planet.module}</strong><span>{planet.nameCN}<i>/</i><span>{planet.name}</span></span></span>
               <span className="system-destination-arrow" aria-hidden="true">↗</span>
             </button>

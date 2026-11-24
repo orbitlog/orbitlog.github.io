@@ -2,7 +2,7 @@
 /* eslint-disable react-refresh/only-export-components */
 import { createContext, useContext, useMemo, useRef } from 'react';
 import type { ReactNode } from 'react';
-import * as THREE from 'three';
+import type * as THREE from 'three';
 
 interface CameraControls {
   focusOn: (target: THREE.Object3D, distance?: number) => Promise<void>;

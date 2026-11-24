@@ -45,6 +45,12 @@ OrbitLog 是一个太阳系形态的个人博客。首页是 3D 太阳系，点�
 - 页面主题样式：`src/pages/Page.css`
 - 行星和太阳贴图：`public/textures/planets/`
 
+## 加载性能
+
+首页的导航和文字先显示，Three.js 场景单独加载；其他模块和文章页按路由加载。星空与各行星使用独立的 Suspense 边界，加载完成的星球即可显示和选择，无需等待整套星空。
+
+星空六面图使用 1024 × 1024、quality 72 的 WebP；行星表面保留 2048 × 1024 分辨率，以 quality 82 转为 WebP，土星环保留 PNG。当前这些贴图合计约 3.04 MB（原 JPEG 约 12.15 MB），新增或替换素材时也应先压缩，并同步修改 TSX/CSS 中的引用。未使用的两份 `star.hdr` 已移除，不随站点发布。
+
 ## 纹理来源
 
 太阳、行星和土星环贴图来自 Solar System Scope 的 Solar Textures，按 Creative Commons Attribution 4.0 International license 发布。

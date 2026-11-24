@@ -92,7 +92,7 @@ export default function Sun() {
           <div className="sun-section-heading"><div><p className="sun-eyebrow">02 / FIND YOUR ORBIT</p><h2 id="sun-destinations-title">下一站，去哪里</h2></div><p>循着好奇，选择你的轨道。</p></div>
           <nav className="sun-destination-grid" aria-label="八个星球模块">
             {destinations.map((planet, index) => <Link className="sun-destination" to={planet.route} key={planet.id}>
-              <div className="sun-destination-top"><span>0{index + 1} <i>/</i> {planet.name}</span><span className={`sun-destination-planet sun-destination-planet--${planet.id}`} style={{ backgroundImage: `url('/textures/planets/${planet.id}.jpg')` }} aria-hidden="true" /></div>
+              <div className="sun-destination-top"><span>0{index + 1} <i>/</i> {planet.name}</span><span className={`sun-destination-planet sun-destination-planet--${planet.id}`} style={{ backgroundImage: `url('/textures/planets/${planet.id}.webp')` }} aria-hidden="true" /></div>
               <p className="sun-destination-name">{planet.nameCN}</p>
               <h3>{planet.module}<span aria-hidden="true">↗</span></h3>
               <p className="sun-destination-summary">{planet.summary}</p>
