@@ -6,7 +6,9 @@ import { blogPosts } from '@/content/modules';
 import { readingMinutes } from '@/content/blog-utils';
 import './Mercury.css';
 
-export function MercuryShell({ children, article = false }: { children: ReactNode; article?: boolean }) {
+export function MercuryShell({ children, article = false, planetId = 'mercury' }: { children: ReactNode; article?: boolean; planetId?: 'mercury' | 'jupiter' }) {
+  const isJupiter = planetId === 'jupiter';
+  const base = `/module/${planetId}`;
   const navigate = useNavigate();
   const [isLeaving, setIsLeaving] = useState(false);
   const leaving = useRef(false);
@@ -16,18 +18,18 @@ export function MercuryShell({ children, article = false }: { children: ReactNod
     if (leaving.current) return;
     leaving.current = true;
     setIsLeaving(true);
-    timer.current = window.setTimeout(() => navigate('/', { state: { returnFrom: 'mercury' } }), window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1300);
+    timer.current = window.setTimeout(() => navigate('/', { state: { returnFrom: planetId } }), window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 0 : 1300);
   };
   return (
-    <main className={`mercury-page${article ? ' mercury-page--reading' : ''}`}>
+    <main className={`mercury-page${article ? ' mercury-page--reading' : ''}${isJupiter ? ' mercury-page--jupiter' : ''}`}>
       {isLeaving && <CloudCurtain className="route-cloud route-cloud--closing" />}
       <header className="mercury-nav">
         <button className="mercury-wordmark" onClick={returnToSystem} disabled={isLeaving} aria-label="OrbitLog · 返回太阳系">ORBITLOG</button>
-        <nav className="mercury-breadcrumb" aria-label="当前位置" inert={isLeaving}><Link to="/module/mercury">水星 · 博客文章</Link><span>/</span><span>{article ? '阅读日志' : '文字归档'}</span></nav>
+        <nav className="mercury-breadcrumb" aria-label="当前位置" inert={isLeaving}><Link to={base}>{isJupiter ? '木星 · 兴趣宇宙' : '水星 · 博客文章'}</Link><span>/</span><span>{article ? '阅读日志' : '文字归档'}</span></nav>
         <button className="mercury-return" onClick={returnToSystem} disabled={isLeaving}><span aria-hidden="true">↶</span>{isLeaving ? '正在返航' : '返回太阳系'}</button>
       </header>
       <div inert={isLeaving}>{children}</div>
-      <footer className="mercury-footer mercury-inner" inert={isLeaving}><div><span>ORBITLOG / MERCURY</span><p>让想法留下轨迹。</p></div><Link to={article ? '/module/mercury' : '/module/sun'}>{article ? '返回全部文章' : '前往太阳 · 站点核心'} <span aria-hidden="true">↗</span></Link></footer>
+      <footer className="mercury-footer mercury-inner" inert={isLeaving}><div><span>ORBITLOG / {planetId.toUpperCase()}</span><p>{isJupiter ? '每一种热爱，都自成轨道。' : '让想法留下轨迹。'}</p></div><Link to={article ? base : '/module/sun'}>{article ? (isJupiter ? '返回兴趣宇宙' : '返回全部文章') : '前往太阳 · 站点核心'} <span aria-hidden="true">↗</span></Link></footer>
     </main>
   );
 }

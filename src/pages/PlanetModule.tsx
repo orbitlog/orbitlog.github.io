@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Link, Navigate, useNavigate, useParams } from 'react-router-dom';
+import { Link, Navigate, useLocation, useNavigate, useParams } from 'react-router-dom';
 import CloudCurtain from '@/components/CloudCurtain';
+import InterestCollection from '@/components/InterestCollection';
+import { interestPosts } from '@/content/interests';
 import { planetPageThemes } from '@/content/planet-pages';
 import type { PlanetPageTheme } from '@/content/planet-pages';
 import { PLANET_DATA } from '@/types/planet';
@@ -11,6 +13,7 @@ const destinations = Object.values(PLANET_DATA).filter((planet) => planet.id !==
 
 function PlanetDestination({ planet, theme }: { planet: PlanetInfo; theme: PlanetPageTheme }) {
   const navigate = useNavigate();
+  const { hash } = useLocation();
   const [isLeaving, setIsLeaving] = useState(false);
   const leaving = useRef(false);
   const returnTimer = useRef<number | undefined>(undefined);
@@ -19,6 +22,9 @@ function PlanetDestination({ planet, theme }: { planet: PlanetInfo; theme: Plane
   const next = destinations[(index + 1) % destinations.length];
 
   useEffect(() => () => window.clearTimeout(returnTimer.current), []);
+  useEffect(() => {
+    if (hash) document.getElementById(decodeURIComponent(hash.slice(1)))?.scrollIntoView({ block: 'start' });
+  }, [hash]);
 
   const reducedMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const returnToSystem = () => {
@@ -73,12 +79,12 @@ function PlanetDestination({ planet, theme }: { planet: PlanetInfo; theme: Plane
         <section className="destination-collection destination-inner" id="planet-collection" aria-labelledby="collection-title">
           <header className="destination-collection-heading">
             <div><p className="destination-eyebrow">{theme.collectionEnglish}</p><h2 id="collection-title">{theme.collection}</h2></div>
-            <span className="destination-empty-label">尚未收录</span>
+            <span className="destination-empty-label">{planet.id === 'jupiter' ? `${interestPosts.length} 篇记录 · 持续更新` : '尚未收录'}</span>
           </header>
-          <div className="destination-empty">
+          {planet.id === 'jupiter' ? <InterestCollection /> : <div className="destination-empty">
             <div className="destination-empty-art" aria-hidden="true"><span /><span /><span /><span /></div>
             <div className="destination-empty-copy"><p className="destination-empty-caption">A LITTLE SPACE FOR WHAT COMES NEXT</p><h3>{theme.emptyTitle}</h3><p>{theme.emptyDescription}</p></div>
-          </div>
+          </div>}
         </section>
 
         <nav className="destination-neighbors destination-inner" aria-label="继续探索星球">

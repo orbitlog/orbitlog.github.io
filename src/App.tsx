@@ -38,6 +38,7 @@ function App() {
           <Route path="/module/sun" element={<Sun />} />
           <Route path="/module/mercury" element={<Mercury />} />
           <Route path="/module/mercury/:slug" element={<MercuryArticle />} />
+          <Route path="/module/jupiter/:slug" element={<MercuryArticle planetId="jupiter" />} />
           <Route path="/module/:planetId" element={<PlanetModule />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/about" element={<About />} />

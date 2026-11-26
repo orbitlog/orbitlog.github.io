@@ -24,6 +24,7 @@ OrbitLog 是一个太阳系形态的个人博客。首页是 3D 太阳系，点�
 - 个人头像、简介图：`public/media/profile/`
 - 项目截图：`public/media/projects/project-name/`
 - 兴趣相关图片：`public/media/interests/`
+- 兴趣文章 Markdown：`src/content/interests/YYYY-MM-DD-title.md`
 - 旅行照片：`public/media/travel/place-name/`
 - 生活碎片：`public/media/life/YYYY/`
 - 未来计划图片：`public/media/future/`
@@ -79,6 +80,24 @@ summary: 一句话摘要
 3. 运行项目，进入水星模块即可看到文章卡片，点击进入 `/module/mercury/文件名（不含 .md）` 阅读全文。支持标题、表格、代码块和文章目录，分类由 `category` 指定（默认“随笔”）。太阳页会自动显示最新文章，`pages:prepare` 会为每篇文章生成可直接访问的静态入口。
 
 编码相关文章可用 `<!-- encoding-lab -->` 在 Markdown 中插入交互式 UTF-8 字节实验。
+
+## 木星兴趣文章与合集
+
+木星 `/module/jupiter` 保留兴趣宇宙的页面风格，在“兴趣轨道”中展示合集与文章。首个合集为「骑马与砍杀2 · 前期开荒指南」，第一篇是属性与专精点讲解，配图从原 ChatGPT 对话下载后保存在 `public/media/interests/bannerlord/attributes/`，来源记录在该目录的 README 中。
+
+- 合集配置、封面和后续选题：`src/content/interests.ts`
+- 正文：`src/content/interests/YYYY-MM-DD-title.md`
+- Front matter 沿用博客字段，增加 `series: bannerlord-early-game`、`order: 1`
+- 文章地址：`/module/jupiter/文件名（不含 .md）`
+- 文章阅读页复用水星的目录、阅读进度和 Markdown 排版，采用木星配色；兴趣文章不混入水星归档
+- `<!-- bannerlord-growth -->` 插入属性与专精点模拟器，使用参考阈值模型，不宣称实际倍率或本机版本已核实
+- 计算模型验证：`node --experimental-strip-types scripts/test-bannerlord.mjs`
+
+新增同合集文章会自动进入木星列表和阅读页的合集导航；`pages:prepare` 会生成相应的静态入口，以便 GitHub Pages 直接访问和刷新。
+
+钢琴合集 `piano-basics` 的首篇是「钢琴初学者指南：从五线谱到第一次练习」。正文在 `src/content/interests/2026-11-26-piano-beginner-guide.md`，十张 SVG 配图在 `public/media/interests/piano/basics/`，覆盖键盘音名、高低音谱号、线与间、中央 C、音符、休止符、符杠、附点、延音线与原创练习谱。乐谱符号使用 Bravura 字体导出为路径，浏览时不需要下载字体；素材目录包含来源、许可和重新生成说明，生成脚本是 `scripts/generate-piano-diagrams.py`。所有时值图均注明“四分音符为一拍”。
+
+第二篇「钢琴入门（二）：基础和弦、转位与移调」在 `src/content/interests/2026-11-26-piano-chords-inversions.md`，七张谱例在 `public/media/interests/piano/chords/`，用 `python3 scripts/generate-piano-chords.py` 重新生成。`<!-- piano-chord-lab -->` 插入和弦练习区：支持 12 个根音、11 种和弦、三和弦/七和弦转位、琴键高亮和用户点击后的短合成音试听。计算与音名拼写在 `src/content/piano-chords.ts`，验证命令为 `node --experimental-strip-types scripts/test-piano-chords.mjs`。第一篇与第二篇由 `series: piano-basics`、`order: 1/2` 自动连接。
 
 ## 开发命令
 

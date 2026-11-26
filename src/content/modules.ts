@@ -14,6 +14,8 @@ export interface BlogPost {
   tags: string[];
   body: string;
   category: string;
+  series?: string;
+  order?: number;
 }
 
 export interface ModuleSection {
@@ -47,7 +49,8 @@ function readFrontMatter(markdown: string) {
   return { meta, body: match[2].trim() };
 }
 
-export const blogPosts: BlogPost[] = Object.entries(blogFiles)
+export function readPosts(files: Record<string, string>): BlogPost[] {
+  return Object.entries(files)
   .map(([path, markdown]) => {
     const { meta, body } = readFrontMatter(markdown);
     const slug = path.split('/').pop()?.replace(/\.md$/, '') ?? path;
@@ -60,9 +63,14 @@ export const blogPosts: BlogPost[] = Object.entries(blogFiles)
       tags: meta.tags ? meta.tags.split(',').map((tag) => tag.trim()) : [],
       body,
       category: meta.category ?? '随笔',
+      series: meta.series,
+      order: meta.order ? Number(meta.order) : undefined,
     };
   })
   .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+export const blogPosts = readPosts(blogFiles);
 
 export const MODULE_CONTENT: Record<string, ModulePageContent> = {
   sun: {

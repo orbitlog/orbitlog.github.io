@@ -25,6 +25,12 @@ export function remarkArticle() {
       if (node.type === 'html' && node.value.trim() === '<!-- encoding-lab -->') {
         return { type: 'code', lang: 'encoding-lab', value: '' };
       }
+      if (node.type === 'html' && node.value.trim() === '<!-- bannerlord-growth -->') {
+        return { type: 'code', lang: 'bannerlord-growth', value: '' };
+      }
+      if (node.type === 'html' && node.value.trim() === '<!-- piano-chord-lab -->') {
+        return { type: 'code', lang: 'piano-chord-lab', value: '' };
+      }
       return node;
     });
   };

@@ -31,6 +31,8 @@ const planets = ['sun', 'mercury', 'venus', 'earth', 'mars', 'jupiter', 'saturn'
 const routes = ['blog', 'about', ...planets.map((planet) => `module/${planet}`)];
 const posts = await readdir(resolve(root, 'src/content/blog'));
 routes.push(...posts.filter((name) => name.endsWith('.md')).map((name) => `module/mercury/${name.slice(0, -3)}`));
+const interests = await readdir(resolve(root, 'src/content/interests'));
+routes.push(...interests.filter((name) => name.endsWith('.md')).map((name) => `module/jupiter/${name.slice(0, -3)}`));
 for (const route of routes) {
   const destination = resolve(output, route);
   await mkdir(destination, { recursive: true });
