@@ -1,4 +1,4 @@
-const s=`---
+const a=`---
 title: 第一条轨道日志
 date: 2026-07-02
 planet: mercury
@@ -9,7 +9,7 @@ summary: 太阳系博客的第一篇示例文章，用来说明以后 Markdown �
 今天先把博客变成一个太阳系。
 
 以后新的博客文章可以继续放在 \`src/content/blog\` 目录里，文件名建议使用 \`YYYY-MM-DD-slug.md\`。页面会自动读取这些 Markdown，并在水星模块里展示。
-`,a=`---
+`,S=`---
 title: 从字符到字节：读懂 Unicode 与 UTF-8
 date: 2026-11-11
 planet: mercury
@@ -145,7 +145,7 @@ UTF-8 文件有时以 \`EF BB BF\` 开头，这是 \`U+FEFF\` 的 UTF-8 编码�
 - [WHATWG：浏览器编码与 TextEncoder / TextDecoder](https://encoding.spec.whatwg.org/)
 - [MDN：String.length](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/length)
 - [MDN：Intl.Segmenter](https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Intl/Segmenter)
-`,S=`---
+`,h=`---
 title: 从 AES 到后量子密码：读懂常见加密方式
 date: 2026-11-19
 planet: mercury
@@ -353,6 +353,6 @@ console.log(new TextDecoder().decode(decrypted));
 - [RFC 8998：TLS 1.3 商密算法套件](https://www.rfc-editor.org/rfc/rfc8998.html)
 - [NIST：首批三项后量子密码标准](https://csrc.nist.gov/News/2024/postquantum-cryptography-fips-approved/)
 - [W3C：Web Crypto API](https://www.w3.org/TR/webcrypto/)
-`,h=Object.assign({"./blog/2026-07-02-first-orbit.md":s,"./blog/2026-11-11-unicode-utf8-encoding.md":a,"./blog/2026-11-19-modern-cryptography.md":S});function i(n){const t=n.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);return t?{meta:Object.fromEntries(t[1].split(`
-`).map(r=>{const[o,...c]=r.split(":");return[o.trim(),c.join(":").trim()]})),body:t[2].trim()}:{meta:{},body:n}}const p=Object.entries(h).map(([n,t])=>{const{meta:e,body:r}=i(t),o=n.split("/").pop()?.replace(/\.md$/,"")??n;return{slug:o,title:e.title??o,date:e.date??"",summary:e.summary??r.split(`
-`)[0]??"",tags:e.tags?e.tags.split(",").map(c=>c.trim()):[],body:r,category:e.category??"随笔"}}).sort((n,t)=>t.date.localeCompare(n.date));export{p as b};
+`,d=Object.assign({"./blog/2026-07-02-first-orbit.md":a,"./blog/2026-11-11-unicode-utf8-encoding.md":S,"./blog/2026-11-19-modern-cryptography.md":h});function i(e){const t=e.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);return t?{meta:Object.fromEntries(t[1].split(`
+`).map(n=>{const[o,...c]=n.split(":");return[o.trim(),c.join(":").trim()]})),body:t[2].trim()}:{meta:{},body:e}}function p(e){return Object.entries(e).map(([t,r])=>{const{meta:n,body:o}=i(r),c=t.split("/").pop()?.replace(/\.md$/,"")??t;return{slug:c,title:n.title??c,date:n.date??"",summary:n.summary??o.split(`
+`)[0]??"",tags:n.tags?n.tags.split(",").map(s=>s.trim()):[],body:o,category:n.category??"随笔",series:n.series,order:n.order?Number(n.order):void 0}}).sort((t,r)=>r.date.localeCompare(t.date))}const g=p(d);export{g as b,p as r};
